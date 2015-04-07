@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6233" systemVersion="14A329f" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6233"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
+        <plugIn identifier="com.apple.pdfkit.ibplugin" version="6751"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -11,9 +12,12 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModuleProvider="">
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
-                <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
+                <outlet property="organizerWindow" destination="QvC-M9-y7g" id="QCm-16-tu5"/>
+                <outlet property="pdfView" destination="HD5-M1-63u" id="1vz-zt-TWu"/>
+                <outlet property="privateWindow" destination="fBz-cl-p1l" id="ZJ2-Hm-UXM"/>
+                <outlet property="publicWindow" destination="oEc-kt-jZZ" id="WhE-cm-gla"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -668,13 +672,96 @@
         </menu>
         <window title="Presenter" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HD5-M1-63u">
+                        <rect key="frame" x="20" y="78" width="440" height="262"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="262" id="LFK-FD-QU8"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="440" id="d8A-0N-X9y"/>
+                        </constraints>
+                    </pdfView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ir-Wi-WJM">
+                        <rect key="frame" x="24" y="302" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5bs-lz-Hdh">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PXf-OB-XDn">
+                        <rect key="frame" x="14" y="13" width="87" height="32"/>
+                        <buttonCell key="cell" type="push" title="Present" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9La-G2-tWg">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="present:" target="Voe-Tx-rLC" id="NbH-6N-vmW"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3BS-Te-VYk">
+                        <rect key="frame" x="101" y="13" width="98" height="32"/>
+                        <buttonCell key="cell" type="push" title="Rehearse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mwA-fV-OFc">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="rehearse:" target="Voe-Tx-rLC" id="HDc-I8-7Ye"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="3BS-Te-VYk" firstAttribute="leading" secondItem="PXf-OB-XDn" secondAttribute="trailing" constant="12" id="7Ch-2G-HJE"/>
+                    <constraint firstAttribute="trailing" secondItem="HD5-M1-63u" secondAttribute="trailing" constant="20" id="BEF-eM-8WK"/>
+                    <constraint firstItem="PXf-OB-XDn" firstAttribute="top" secondItem="HD5-M1-63u" secondAttribute="bottom" constant="37" id="Zk1-3M-w8X"/>
+                    <constraint firstItem="HD5-M1-63u" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="bjX-vd-RlD"/>
+                    <constraint firstItem="3BS-Te-VYk" firstAttribute="top" secondItem="PXf-OB-XDn" secondAttribute="top" id="hqB-a5-0EV"/>
+                    <constraint firstItem="HD5-M1-63u" firstAttribute="leading" secondItem="PXf-OB-XDn" secondAttribute="leading" id="q3d-Yh-viS"/>
+                    <constraint firstAttribute="bottom" secondItem="PXf-OB-XDn" secondAttribute="bottom" constant="20" id="qfE-ep-Vcm"/>
+                    <constraint firstItem="HD5-M1-63u" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="uYe-6b-CAb"/>
+                </constraints>
             </view>
+            <point key="canvasLocation" x="342" y="401"/>
+        </window>
+        <window title="PublicWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="oEc-kt-jZZ">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="131" y="158" width="480" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <view key="contentView" id="6Tp-5d-r9l">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0hM-jf-ByC">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                    </pdfView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="0hM-jf-ByC" firstAttribute="top" secondItem="6Tp-5d-r9l" secondAttribute="top" id="8Eq-zK-d1M"/>
+                    <constraint firstItem="0hM-jf-ByC" firstAttribute="leading" secondItem="6Tp-5d-r9l" secondAttribute="leading" id="LwA-fE-e1N"/>
+                    <constraint firstAttribute="trailing" secondItem="0hM-jf-ByC" secondAttribute="trailing" id="RNH-vG-RKx"/>
+                    <constraint firstAttribute="bottom" secondItem="0hM-jf-ByC" secondAttribute="bottom" id="rVm-oJ-68L"/>
+                </constraints>
+            </view>
+            <point key="canvasLocation" x="303" y="826"/>
+        </window>
+        <window title="PrivateWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="fBz-cl-p1l">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="131" y="158" width="480" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <view key="contentView" id="dek-K2-Rvc">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </view>
+            <point key="canvasLocation" x="595" y="841"/>
         </window>
     </objects>
 </document>

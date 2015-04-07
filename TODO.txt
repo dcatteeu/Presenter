@@ -1,0 +1,27 @@
+== v0.1 ==
+
+* Display current slide full-screen on the second screen and smaller on the first screen.
+
+== Future features ==
+
+* Allow to switch screens.
+
+* Display notes.
+
+Where do notes come from? Notes could be PDF comments, or PDF comments with a given prefix.
+
+** The notes stick to the bottom but their height can vary. They can be completely hidden. Font is fixed (Helvetica? Won't this get us into trouble with certain unicode characters?), its size can be set by the user. 
+
+* Display timer and or clock.
+
+* Display current page number.
+
+* Display next slide.
+
+* Display slides list, so that the user can jump to another slide.
+
+* Allow the user to stitch multiple presentations. For example, when multiple talks follow each other quickly, presenters can be asked to provide their slides upfront as a PDF. These can be put one after the other.
+
+* User can select slides to be skipped.
+
+* Users can insert JPEGs, PNGs, ... as a slide.

@@ -12,6 +12,7 @@
 		524DF9521AC9A3AC006D661B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 524DF9511AC9A3AC006D661B /* Images.xcassets */; };
 		524DF9551AC9A3AC006D661B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 524DF9531AC9A3AC006D661B /* MainMenu.xib */; };
 		524DF9611AC9A3AC006D661B /* PresenterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 524DF9601AC9A3AC006D661B /* PresenterTests.m */; };
+		524DF96B1AC9AFDE006D661B /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 524DF96A1AC9AFDE006D661B /* Quartz.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 		524DF95A1AC9A3AC006D661B /* PresenterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PresenterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		524DF95F1AC9A3AC006D661B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		524DF9601AC9A3AC006D661B /* PresenterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PresenterTests.m; sourceTree = "<group>"; };
+		524DF96A1AC9AFDE006D661B /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				524DF96B1AC9AFDE006D661B /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +61,7 @@
 		524DF93E1AC9A3AC006D661B = {
 			isa = PBXGroup;
 			children = (
+				524DF96A1AC9AFDE006D661B /* Quartz.framework */,
 				524DF9491AC9A3AC006D661B /* Presenter */,
 				524DF95D1AC9A3AC006D661B /* PresenterTests */,
 				524DF9481AC9A3AC006D661B /* Products */,
@@ -398,6 +402,7 @@
 				524DF9661AC9A3AC006D661B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		524DF9671AC9A3AC006D661B /* Build configuration list for PBXNativeTarget "PresenterTests" */ = {
 			isa = XCConfigurationList;
@@ -406,6 +411,7 @@
 				524DF9691AC9A3AC006D661B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
