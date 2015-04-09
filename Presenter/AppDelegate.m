@@ -76,13 +76,6 @@
     return YES;
 }
 
-- (BOOL)application:(NSApplication *)theApplication
-           openFile:(NSString *)filename {
-    self.pdf = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:filename]];
-    [self.pdfView setDocument:self.pdf];
-    return YES;
-}
-
 
 
 /* ----------------------------------------------------------------
@@ -95,6 +88,18 @@
 
 - (IBAction)rehearse:(id)sender {
     [self switchToRehearsalMode];
+}
+
+- (IBAction)openDocument:(id)sender {
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    [panel beginWithCompletionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSURL* url = [[panel URLs] objectAtIndex:0];
+            // TODO: Check whether we have a PDF.
+            self.pdf = [[PDFDocument alloc] initWithURL:url];
+            [self.pdfView setDocument:self.pdf];
+        }
+    }];
 }
 
 
@@ -115,15 +120,15 @@
 
 /* Presentation mode always shows at least the public window. If there is no second screen, the slides are shown on the primary screen assuming that other people are watching and no comments, etc. are visible. */
 - (void)switchToPresentationMode {
-//    [self.organizerWindow orderOut:self];
-//    [self.privateWindow orderFront:self];
-//    [self.privateWindow toggleFullScreen:self];
-//    if ([[NSScreen screens] count] >= 2) {
-//        NSRect rect = [[[NSScreen screens] objectAtIndex:self.publicScreenIndex] visibleFrame];
-//        [self.publicWindow setFrame:rect display:YES];
-//        [self.publicWindow orderFront:self];
-//        [self.publicWindow toggleFullScreen:self];
-//    }
+    [self.organizerWindow orderOut:self];
+    [self.privateWindow orderFront:self];
+    [self.privateWindow toggleFullScreen:self];
+    if ([[NSScreen screens] count] >= 2) {
+        NSRect rect = [[[NSScreen screens] objectAtIndex:self.publicScreenIndex] visibleFrame];
+        [self.publicWindow setFrame:rect display:YES];
+        [self.publicWindow orderFront:self];
+        [self.publicWindow toggleFullScreen:self];
+    }
 }
 
 /* Rehearsal mode is like presentation mode, but always shows at least the private window. If there is no second screen, the user still wants to see his comments, etc. */
@@ -137,6 +142,22 @@
         [self.publicWindow orderFront:self];
         [self.publicWindow toggleFullScreen:self];
     }
+}
+
+// TODO: Add functions showPrivateWindowOnly, showPublicWindowOnly.
+
+/* Assumes there are two screens. */
+- (void)showPrivateAndPublicWindow {
+    [self.organizerWindow orderOut:self];
+    [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
+    [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
+}
+
+- (void)showWindow:(NSWindow *)window fullScreenOn:(NSScreen *)screen {
+    NSRect rect = [screen visibleFrame];
+    [self.publicWindow setFrame:rect display:YES];
+    [self.publicWindow orderFront:self];
+    [self.publicWindow toggleFullScreen:self];
 }
 
 @end
