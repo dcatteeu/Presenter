@@ -14,9 +14,12 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="currentPdfView" destination="rSt-ZC-khH" id="dDh-aC-hXE"/>
+                <outlet property="nextPdfView" destination="kTe-dX-JAn" id="xOw-rb-S45"/>
                 <outlet property="organizerWindow" destination="QvC-M9-y7g" id="QCm-16-tu5"/>
                 <outlet property="pdfView" destination="HD5-M1-63u" id="1vz-zt-TWu"/>
                 <outlet property="privateWindow" destination="fBz-cl-p1l" id="ZJ2-Hm-UXM"/>
+                <outlet property="publicPdfView" destination="0hM-jf-ByC" id="Sdb-DH-8nK"/>
                 <outlet property="publicWindow" destination="oEc-kt-jZZ" id="WhE-cm-gla"/>
             </connections>
         </customObject>
@@ -726,7 +729,7 @@
                     <constraint firstItem="HD5-M1-63u" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="uYe-6b-CAb"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="342" y="401"/>
+            <point key="canvasLocation" x="303" y="403"/>
         </window>
         <window title="PublicWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="oEc-kt-jZZ">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -760,8 +763,16 @@
             <view key="contentView" id="dek-K2-Rvc">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" displayMode="singlePage" displaysPageBreaks="NO" scaleFactor="0.18181818181818182" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH">
+                        <rect key="frame" x="20" y="106" width="240" height="144"/>
+                    </pdfView>
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" displayMode="singlePage" displaysPageBreaks="NO" scaleFactor="0.11994949494949494" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn">
+                        <rect key="frame" x="299" y="131" width="150" height="95"/>
+                    </pdfView>
+                </subviews>
             </view>
-            <point key="canvasLocation" x="595" y="841"/>
+            <point key="canvasLocation" x="303" y="1177"/>
         </window>
     </objects>
 </document>
