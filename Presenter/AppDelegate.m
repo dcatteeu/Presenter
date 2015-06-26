@@ -40,7 +40,7 @@
 @property (weak) IBOutlet PDFView *currentPdfView;
 @property (weak) IBOutlet PDFView *nextPdfView;
 @property (weak) IBOutlet PDFView *publicPdfView;
-@property NSUInteger currentSlide;
+@property NSArray *pdfViews;
 
 - (IBAction)present:(id)sender;
 - (IBAction)rehearse:(id)sender;
@@ -65,6 +65,10 @@
  */
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    
+    /* Put all pdf views in an array for bulk processing. */
+    self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicPdfView, self.currentPdfView, self.nextPdfView, nil];
+    
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
     if (SINGLE_SCREEN_TEST) {
@@ -80,7 +84,7 @@
     // To ease debugging, load a PDF.
     self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Documents/programming/design-patterns-norvig.pdf"]];
     
-    /* When opening the application with a PDF file (for example by double clicking the PDF or dragging it on top of the application's icon. application:openFile is called before applicationDidFinishLaunching:, so self.pdf is set, but the hasn't been linked with self.pdfView. */
+    /* When opening the application with a PDF file (for example by double clicking the PDF or dragging it on top of the application's icon. application:openFile is called before applicationDidFinishLaunching:, so self.pdf is set, but the hasn't been linked with self.pdfView. Therefore, check. */
     if (self.pdf) {
         NSLog(@"Yes");
         [self loadPdf];
@@ -102,6 +106,34 @@
 /* ----------------------------------------------------------------
  * Events
  */
+
+- (void)keyDown:(NSEvent *)event {
+    // TODO: replace keys by constants, but where are they defined?
+    switch (event.keyCode) {
+        case 0x35:
+            [self switchToOrganizerMode];
+            break;
+            
+            // up or left
+        case NSUpArrowFunctionKey:
+        case 0x7e:
+        case NSLeftArrowFunctionKey:
+        case 0x7b:
+            [self previousSlide];
+            break;
+            
+            // right or down
+        case NSRightArrowFunctionKey:
+        case 0x7c:
+        case NSDownArrowFunctionKey:
+        case 0x7d:
+            [self nextSlide];
+            break;
+            
+        default:
+            NSLog(@"Unhandled keyDown: %@ (0x%x)", event.charactersIgnoringModifiers,  event.keyCode);
+    }
+}
 
 - (IBAction)present:(id)sender {
     [self switchToPresentationMode];
@@ -126,16 +158,17 @@
 
 
 
+
+
 /* ----------------------------------------------------------------
- * Implementation
+ * Implementation window handling
  */
 
 - (void)loadPdf {
-    self.currentSlide = 1;
-    [self.pdfView setDocument:self.pdf];
-    [self.publicPdfView setDocument:self.pdf];
-    [self.currentPdfView setDocument:self.pdf];
-    [self.nextPdfView setDocument:self.pdf];
+    for (PDFView* pdfView in self.pdfViews) {
+        [pdfView setDocument:self.pdf];
+    }
+    /* This view is always 1 page ahead. TODO: show black slide and message "end of presentation" when appropriated. */
     [self.nextPdfView goToNextPage:self];
 }
 
@@ -173,12 +206,20 @@
 - (void)showPrivateWindowOnly {
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
+    
+    /* Set first responder to catch key events. */
+    [self.publicWindow makeFirstResponder:self];
+    [self.privateWindow makeFirstResponder:self];
 }
 
 /* Assumes there is only one screen. */
 - (void)showPublicWindowOnly {
     [self.organizerWindow orderOut:self];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
+    
+    /* Set first responder to catch key events. */
+    [self.publicWindow makeFirstResponder:self];
+    [self.privateWindow makeFirstResponder:self];
 }
 
 /* Assumes there are two screens. */
@@ -186,6 +227,10 @@
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
+    
+    /* Set first responder to catch key events. */
+    [self.publicWindow makeFirstResponder:self];
+    [self.privateWindow makeFirstResponder:self];
 }
 
 - (void)showWindow:(NSWindow *)window fullScreenOn:(NSScreen *)screen {
@@ -197,6 +242,46 @@
         [window orderFront:self];
         [window toggleFullScreen:self];
     }
+}
+
+
+
+/* ----------------------------------------------------------------
+ * Implementation slide walking
+ * PDF views do not allow to jump to a specific slide number. You can jump to a specific page. And you can find the page for a specific page number (called index) from the PDF document.
+ */
+
+- (NSUInteger)currentPageNumber {
+    PDFPage *currentPage = self.pdfView.currentPage;
+    NSUInteger currentPageNumber = [self.pdfView.document indexForPage:currentPage];
+    return currentPageNumber;
+}
+
+- (void)gotoSlide:(NSUInteger)slideIndex {
+    if (slideIndex > self.pdf.pageCount) {
+        return;
+    }
+    
+    PDFPage *page = [self.pdfView.document pageAtIndex:slideIndex];
+    for (PDFView *pdfView in self.pdfViews) {
+        [pdfView goToPage:page];
+    }
+    
+    if ([self.nextPdfView canGoToNextPage]) {
+        [self.nextPdfView goToNextPage:self];
+    } else {
+        NSLog(@"display the at-end-of-presentation message");
+    }
+}
+
+- (void)nextSlide {
+    NSUInteger nextPageNumber = [self currentPageNumber] + 1;
+    [self gotoSlide:nextPageNumber];
+}
+
+- (void)previousSlide {
+    NSUInteger previousPageNumber = [self currentPageNumber] - 1;
+    [self gotoSlide:previousPageNumber];
 }
 
 @end
