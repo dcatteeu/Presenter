@@ -49,6 +49,17 @@
 
 @implementation AppDelegate
 
+
+
+/* ----------------------------------------------------------------
+ * Preferences
+ */
+- (void)registerDefaults {
+    NSDictionary* defaultValues = [NSDictionary dictionaryWithObjectsAndKeys:@0.2, @"heightComments", @0.5, @"widthCurrentSlide", @0.6, @"slideAspectRatio", @10.0, @"topCurrentSlide", @10.0, @"leftCurrentSlide", nil];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
+}
+
+
 /* ----------------------------------------------------------------
  * NSWindowDelegate implementation 
  */
@@ -65,6 +76,7 @@
  */
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    [self registerDefaults];
     
     /* Put all pdf views in an array for bulk processing. */
     self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicPdfView, self.currentPdfView, self.nextPdfView, nil];
@@ -80,6 +92,9 @@
     /* Set delegate to catch windowDidExitFullScreen event to restore organizer mode when exiting full screen. */
     [self.publicWindow setDelegate:self];
     [self.privateWindow setDelegate:self];
+    
+    /* Layout private window manually according to preferences. */
+    [self layoutPrivateWindow];
     
     // To ease debugging, load a PDF.
     self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Documents/programming/design-patterns-norvig.pdf"]];
@@ -164,6 +179,21 @@
  * Implementation window handling
  */
 
+- (void)layoutPrivateWindow {
+    // TODO: programmatically change the view's size
+    NSRect frame = [self.currentPdfView.superview frame];
+    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    CGFloat x = [preferences floatForKey:@"leftCurrentSlide"];
+    CGFloat y = [preferences floatForKey:@"topCurrentSlide"];
+    CGFloat w = frame.size.width * [preferences floatForKey:@"widthCurrentSlide"];
+    CGFloat h = w * [preferences floatForKey:@"slideAspectRatio"];
+    frame = NSMakeRect(x, y, w, h);
+    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    [self.currentPdfView setFrame:frame];
+    [self.currentPdfView setNeedsDisplay:YES];
+}
+
 - (void)loadPdf {
     for (PDFView* pdfView in self.pdfViews) {
         [pdfView setDocument:self.pdf];
@@ -206,6 +236,7 @@
 - (void)showPrivateWindowOnly {
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
+    [self layoutPrivateWindow];
     
     /* Set first responder to catch key events. */
     [self.publicWindow makeFirstResponder:self];
@@ -227,6 +258,7 @@
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
+    [self layoutPrivateWindow];
     
     /* Set first responder to catch key events. */
     [self.publicWindow makeFirstResponder:self];

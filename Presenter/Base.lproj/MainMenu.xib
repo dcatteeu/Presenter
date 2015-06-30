@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
-        <plugIn identifier="com.apple.pdfkit.ibplugin" version="6751"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.pdfkit.ibplugin" version="7706"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -160,12 +161,12 @@
                                 </connections>
                             </menuItem>
                             <menuItem title="Paste" keyEquivalent="v" id="gVA-U4-sdL">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="paste:" target="-1" id="UvS-8e-Qdg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Paste and Match Style" keyEquivalent="V" id="WeT-3V-zwk">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="Paste and Match Style" keyEquivalent="v" id="WeT-3V-zwk">
                                 <connections>
                                     <action selector="pasteAsPlainText:" target="-1" id="cEh-KX-wJQ"/>
                                 </connections>
@@ -677,21 +678,21 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="360"/>
+            <rect key="contentRect" x="335" y="390" width="499" height="366"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                <rect key="frame" x="0.0" y="-1" width="499" height="366"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HD5-M1-63u">
-                        <rect key="frame" x="20" y="78" width="440" height="262"/>
+                    <pdfView wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HD5-M1-63u">
+                        <rect key="frame" x="20" y="78" width="459" height="268"/>
                         <constraints>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="262" id="LFK-FD-QU8"/>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="440" id="d8A-0N-X9y"/>
                         </constraints>
                     </pdfView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ir-Wi-WJM">
-                        <rect key="frame" x="24" y="302" width="82" height="32"/>
+                        <rect key="frame" x="24" y="308" width="82" height="32"/>
                         <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5bs-lz-Hdh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -729,9 +730,9 @@
                     <constraint firstItem="HD5-M1-63u" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="uYe-6b-CAb"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="303" y="403"/>
+            <point key="canvasLocation" x="312.5" y="406"/>
         </window>
-        <window title="PublicWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="oEc-kt-jZZ">
+        <window title="PublicWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="oEc-kt-jZZ">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -754,25 +755,53 @@
             </view>
             <point key="canvasLocation" x="303" y="826"/>
         </window>
-        <window title="PrivateWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="fBz-cl-p1l">
+        <window title="PrivateWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="fBz-cl-p1l">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="158" width="480" height="270"/>
+            <rect key="contentRect" x="131" y="158" width="480" height="370"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="dek-K2-Rvc">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <rect key="frame" x="0.0" y="-3" width="480" height="370"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" displayMode="singlePage" displaysPageBreaks="NO" scaleFactor="0.18181818181818182" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH">
-                        <rect key="frame" x="20" y="106" width="240" height="144"/>
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" misplaced="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH">
+                        <rect key="frame" x="20" y="113" width="240" height="144"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="5:3" id="7sQ-qG-eOV"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="144" id="Msv-GT-JSE"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="auZ-da-FRo"/>
+                        </constraints>
                     </pdfView>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" displayMode="singlePage" displaysPageBreaks="NO" scaleFactor="0.11994949494949494" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn">
-                        <rect key="frame" x="299" y="131" width="150" height="95"/>
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn">
+                        <rect key="frame" x="310" y="138" width="150" height="95"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="1Zn-jX-y9W"/>
+                            <constraint firstAttribute="width" secondItem="kTe-dX-JAn" secondAttribute="height" multiplier="30:19" id="BhR-Jq-1sL"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="95" id="D0F-B4-pfL"/>
+                        </constraints>
                     </pdfView>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9n-0R-0cU">
+                        <rect key="frame" x="78" y="265" width="124" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Current: Slide i of n" id="7Ew-YH-EiB">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="rSt-ZC-khH" firstAttribute="centerY" secondItem="kTe-dX-JAn" secondAttribute="centerY" id="4ie-hg-8uz"/>
+                    <constraint firstItem="rSt-ZC-khH" firstAttribute="centerX" secondItem="i9n-0R-0cU" secondAttribute="centerX" id="5dW-Yt-xh4"/>
+                    <constraint firstItem="rSt-ZC-khH" firstAttribute="leading" secondItem="dek-K2-Rvc" secondAttribute="leading" constant="20" id="8wx-d6-i3B"/>
+                    <constraint firstAttribute="trailing" secondItem="kTe-dX-JAn" secondAttribute="trailing" constant="20" id="9F9-Cr-wgk"/>
+                    <constraint firstItem="rSt-ZC-khH" firstAttribute="top" secondItem="i9n-0R-0cU" secondAttribute="bottom" constant="8" id="Cly-5k-7cT"/>
+                    <constraint firstItem="kTe-dX-JAn" firstAttribute="leading" secondItem="rSt-ZC-khH" secondAttribute="trailing" constant="50" id="QMB-LT-uCx"/>
+                    <constraint firstItem="i9n-0R-0cU" firstAttribute="top" secondItem="dek-K2-Rvc" secondAttribute="top" constant="88" id="RZ1-Fl-3Ka"/>
+                    <constraint firstItem="rSt-ZC-khH" firstAttribute="width" secondItem="kTe-dX-JAn" secondAttribute="height" multiplier="48:19" id="edF-va-Wlb"/>
+                </constraints>
             </view>
-            <point key="canvasLocation" x="303" y="1177"/>
+            <point key="canvasLocation" x="303" y="1227"/>
         </window>
     </objects>
 </document>
