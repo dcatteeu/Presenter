@@ -50,6 +50,7 @@
 
 - (IBAction)present:(id)sender;
 - (IBAction)rehearse:(id)sender;
+- (IBAction)openDocument:(id)sender;
 
 @end
 
@@ -102,8 +103,8 @@
     /* Layout private window manually according to preferences. */
     //[self layoutPrivateWindow];
     
-    // To ease debugging, load a PDF.
-    self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Documents/programming/design-patterns-norvig.pdf"]];
+    /* To ease debugging, load a PDF. */
+    self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/example.pdf"]];
     
     /* When opening the application with a PDF file (for example by double clicking the PDF or dragging it on top of the application's icon. application:openFile is called before applicationDidFinishLaunching:, so self.pdf is set, but the hasn't been linked with self.pdfView. Therefore, check. */
     if (self.pdf) {
