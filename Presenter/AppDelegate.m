@@ -42,6 +42,9 @@
 @property (weak) IBOutlet PDFView *publicPdfView;
 @property NSArray *pdfViews;
 
+@property (weak) IBOutlet NSTextField *currentSlideLabel;
+
+
 - (IBAction)present:(id)sender;
 - (IBAction)rehearse:(id)sender;
 
@@ -79,7 +82,7 @@
     [self registerDefaults];
     
     /* Put all pdf views in an array for bulk processing. */
-    self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicPdfView, self.currentPdfView, self.nextPdfView, nil];
+    self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicPdfView, self.currentPdfView, nil];
     
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
@@ -94,7 +97,7 @@
     [self.privateWindow setDelegate:self];
     
     /* Layout private window manually according to preferences. */
-    [self layoutPrivateWindow];
+    //[self layoutPrivateWindow];
     
     // To ease debugging, load a PDF.
     self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Documents/programming/design-patterns-norvig.pdf"]];
@@ -134,7 +137,7 @@
         case 0x7e:
         case NSLeftArrowFunctionKey:
         case 0x7b:
-            [self previousSlide];
+            [self previousSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
             break;
             
             // right or down
@@ -142,7 +145,7 @@
         case 0x7c:
         case NSDownArrowFunctionKey:
         case 0x7d:
-            [self nextSlide];
+            [self nextSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
             break;
             
         default:
@@ -171,7 +174,13 @@
     }];
 }
 
-
+- (void)loadPdf {
+    for (PDFView* pdfView in self.pdfViews) {
+        [pdfView setDocument:self.pdf];
+    }
+    [self.nextPdfView setDocument:self.pdf];
+    [self gotoSlide:1 views:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+}
 
 
 
@@ -179,28 +188,20 @@
  * Implementation window handling
  */
 
-- (void)layoutPrivateWindow {
-    // TODO: programmatically change the view's size
-    NSRect frame = [self.currentPdfView.superview frame];
-    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    CGFloat x = [preferences floatForKey:@"leftCurrentSlide"];
-    CGFloat y = [preferences floatForKey:@"topCurrentSlide"];
-    CGFloat w = frame.size.width * [preferences floatForKey:@"widthCurrentSlide"];
-    CGFloat h = w * [preferences floatForKey:@"slideAspectRatio"];
-    frame = NSMakeRect(x, y, w, h);
-    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-    [self.currentPdfView setFrame:frame];
-    [self.currentPdfView setNeedsDisplay:YES];
-}
-
-- (void)loadPdf {
-    for (PDFView* pdfView in self.pdfViews) {
-        [pdfView setDocument:self.pdf];
-    }
-    /* This view is always 1 page ahead. TODO: show black slide and message "end of presentation" when appropriated. */
-    [self.nextPdfView goToNextPage:self];
-}
+//- (void)layoutPrivateWindow {
+//    // TODO: programmatically change the view's size
+//    NSRect frame = [self.currentPdfView.superview frame];
+//    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+//    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+//    CGFloat x = [preferences floatForKey:@"leftCurrentSlide"];
+//    CGFloat y = [preferences floatForKey:@"topCurrentSlide"];
+//    CGFloat w = frame.size.width * [preferences floatForKey:@"widthCurrentSlide"];
+//    CGFloat h = w * [preferences floatForKey:@"slideAspectRatio"];
+//    frame = NSMakeRect(x, y, w, h);
+//    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+//    [self.currentPdfView setFrame:frame];
+//    [self.currentPdfView setNeedsDisplay:YES];
+//}
 
 /* In organizer mode only the organizer window is visible while the public and private window are hidden. */
 - (void)switchToOrganizerMode {
@@ -236,7 +237,7 @@
 - (void)showPrivateWindowOnly {
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
-    [self layoutPrivateWindow];
+    //[self layoutPrivateWindow];
     
     /* Set first responder to catch key events. */
     [self.publicWindow makeFirstResponder:self];
@@ -258,7 +259,7 @@
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
-    [self layoutPrivateWindow];
+    //[self layoutPrivateWindow];
     
     /* Set first responder to catch key events. */
     [self.publicWindow makeFirstResponder:self];
@@ -280,40 +281,50 @@
 
 /* ----------------------------------------------------------------
  * Implementation slide walking
- * PDF views do not allow to jump to a specific slide number. You can jump to a specific page. And you can find the page for a specific page number (called index) from the PDF document.
  */
 
-- (NSUInteger)currentPageNumber {
-    PDFPage *currentPage = self.pdfView.currentPage;
-    NSUInteger currentPageNumber = [self.pdfView.document indexForPage:currentPage];
-    return currentPageNumber;
+- (void)nextSlide:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
+    NSUInteger nextPageNumber = [self currentSlideIndex:[pdfViews objectAtIndex:0]] + 1;
+    [self gotoSlide:nextPageNumber views:pdfViews oneAheadPdfView:oneAheadPdfView label:label];
 }
 
-- (void)gotoSlide:(NSUInteger)slideIndex {
-    if (slideIndex > self.pdf.pageCount) {
+- (void)previousSlide:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
+    NSUInteger previousPageNumber = [self currentSlideIndex:[pdfViews objectAtIndex:0]] - 1;
+    [self gotoSlide:previousPageNumber views:pdfViews oneAheadPdfView:oneAheadPdfView label:label];
+}
+
+/* Any page switch passes through this function. */
+- (void)gotoSlide:(NSUInteger)slideIndex views:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
+    PDFDocument *pdf = [[pdfViews objectAtIndex:0] document];
+    if (slideIndex > pdf.pageCount) {
         return;
     }
     
-    PDFPage *page = [self.pdfView.document pageAtIndex:slideIndex];
-    for (PDFView *pdfView in self.pdfViews) {
+    /* PDF views do not allow to jump to a specific slide number. You can jump to a specific page. And you can find the page for a specific page number (called index) from the PDF document. */
+    PDFPage *page = [pdf pageAtIndex:slideIndex];
+    for (PDFView *pdfView in pdfViews) {
         [pdfView goToPage:page];
     }
     
-    if ([self.nextPdfView canGoToNextPage]) {
-        [self.nextPdfView goToNextPage:self];
+    /* To keep the oneAheadPdfView exactly one slide ahead, check whether, or not, we are at the end. */
+    if (slideIndex < pdf.pageCount) {
+        page = [pdf pageAtIndex:1 + slideIndex];
+        [oneAheadPdfView goToPage:page];
     } else {
         NSLog(@"display the at-end-of-presentation message");
     }
+    
+    [self updateCurrentSlideLabel:label slide:slideIndex of:pdf.pageCount];
 }
 
-- (void)nextSlide {
-    NSUInteger nextPageNumber = [self currentPageNumber] + 1;
-    [self gotoSlide:nextPageNumber];
+- (void)updateCurrentSlideLabel:(NSTextField *)label slide:(NSUInteger)currentSlideIndex of:(NSUInteger)slideCount {
+    [label setStringValue:[NSString stringWithFormat:@"Current: Slide %lu of %lu", currentSlideIndex, slideCount]];
 }
 
-- (void)previousSlide {
-    NSUInteger previousPageNumber = [self currentPageNumber] - 1;
-    [self gotoSlide:previousPageNumber];
+- (NSUInteger)currentSlideIndex:(PDFView *)view {
+    PDFPage *currentPage = view.currentPage;
+    NSUInteger currentPageNumber = [view.document indexForPage:currentPage];
+    return currentPageNumber;
 }
 
 @end
