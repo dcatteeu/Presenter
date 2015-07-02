@@ -42,6 +42,9 @@
 @property (weak) IBOutlet PDFView *publicPdfView;
 @property NSArray *pdfViews;
 
+/* This PDF is used by the oneAheadView to show a black slide when at the end of the presentation. */
+@property PDFDocument *blackPdf;
+
 @property (weak) IBOutlet NSTextField *currentSlideLabel;
 
 
@@ -107,6 +110,8 @@
         NSLog(@"Yes");
         [self loadPdf];
     }
+    
+    self.blackPdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/black.pdf"]];;
     
     [self switchToOrganizerMode];
 }
@@ -179,7 +184,9 @@
         [pdfView setDocument:self.pdf];
     }
     [self.nextPdfView setDocument:self.pdf];
-    [self gotoSlide:1 views:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+    
+    /* Slide indices start at 0. */
+    [self gotoSlide:0 views:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
 }
 
 
@@ -296,7 +303,7 @@
 /* Any page switch passes through this function. */
 - (void)gotoSlide:(NSUInteger)slideIndex views:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
     PDFDocument *pdf = [[pdfViews objectAtIndex:0] document];
-    if (slideIndex > pdf.pageCount) {
+    if (slideIndex >= pdf.pageCount) {
         return;
     }
     
@@ -307,18 +314,21 @@
     }
     
     /* To keep the oneAheadPdfView exactly one slide ahead, check whether, or not, we are at the end. */
-    if (slideIndex < pdf.pageCount) {
-        page = [pdf pageAtIndex:1 + slideIndex];
+    NSUInteger nextSlideIndex = slideIndex + 1;
+    if (nextSlideIndex < pdf.pageCount) {
+        [oneAheadPdfView setDocument:pdf];
+        page = [pdf pageAtIndex:nextSlideIndex];
         [oneAheadPdfView goToPage:page];
     } else {
-        NSLog(@"display the at-end-of-presentation message");
+        [oneAheadPdfView setDocument:self.blackPdf];
     }
     
     [self updateCurrentSlideLabel:label slide:slideIndex of:pdf.pageCount];
 }
 
 - (void)updateCurrentSlideLabel:(NSTextField *)label slide:(NSUInteger)currentSlideIndex of:(NSUInteger)slideCount {
-    [label setStringValue:[NSString stringWithFormat:@"Current: Slide %lu of %lu", currentSlideIndex, slideCount]];
+    NSString *string = [NSString stringWithFormat:@"Current: Slide %lu of %lu", 1 + currentSlideIndex, slideCount];
+    [label setStringValue:string];
 }
 
 - (NSUInteger)currentSlideIndex:(PDFView *)view {
