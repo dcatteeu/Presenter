@@ -20,11 +20,10 @@
  
 */
 
-#define SINGLE_SCREEN_TEST 0
-
 @import Quartz;
 
 #import "AppDelegate.h"
+#import "SlideView.h"
 
 @interface AppDelegate ()
 
@@ -37,9 +36,9 @@
 
 @property PDFDocument *pdf;
 @property (weak) IBOutlet PDFView *pdfView;
-@property (weak) IBOutlet PDFView *currentPdfView;
-@property (weak) IBOutlet PDFView *nextPdfView;
-@property (weak) IBOutlet PDFView *publicPdfView;
+@property (weak) IBOutlet SlideView *currentPdfView;
+@property (weak) IBOutlet SlideView *nextPdfView;
+@property (weak) IBOutlet SlideView *publicSlideView;
 @property NSArray *pdfViews;
 
 /* This PDF is used by the oneAheadView to show a black slide when at the end of the presentation. */
@@ -62,7 +61,7 @@
  * Preferences
  */
 - (void)registerDefaults {
-    NSDictionary* defaultValues = [NSDictionary dictionaryWithObjectsAndKeys:@0.2, @"heightComments", @0.5, @"widthCurrentSlide", @0.6, @"slideAspectRatio", @10.0, @"topCurrentSlide", @10.0, @"leftCurrentSlide", nil];
+    NSDictionary *defaultValues = [NSDictionary dictionaryWithObjectsAndKeys:@0.2, @"heightComments", @0.5, @"widthCurrentSlide", @0.6, @"slideAspectRatio", @10.0, @"topCurrentSlide", @10.0, @"leftCurrentSlide", nil];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -72,8 +71,11 @@
  */
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
-    NSLog(@"windowWillExitFullScreen:");
-    [self switchToOrganizerMode];
+    NSLog(@"windowDidExitFullScreen:");
+//    NSWindow *window = (NSWindow *)notification.object;
+//    if (window == self.publicWindow || window == self.privateWindow) {
+        [self switchToOrganizerMode];
+//    }
 }
 
 
@@ -86,13 +88,10 @@
     [self registerDefaults];
     
     /* Put all pdf views in an array for bulk processing. */
-    self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicPdfView, self.currentPdfView, nil];
+    self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentPdfView, nil];
     
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
-    if (SINGLE_SCREEN_TEST) {
-        self.publicScreenIndex = 0;
-    }
     NSUInteger nofScreens = [[NSScreen screens] count];
     NSLog(@"nofScreens: %u", (unsigned int)nofScreens);
     
@@ -131,40 +130,12 @@
  * Events
  */
 
-- (void)keyDown:(NSEvent *)event {
-    // TODO: replace keys by constants, but where are they defined?
-    switch (event.keyCode) {
-        case 0x35:
-            [self switchToOrganizerMode];
-            break;
-            
-            // up or left
-        case NSUpArrowFunctionKey:
-        case 0x7e:
-        case NSLeftArrowFunctionKey:
-        case 0x7b:
-            [self previousSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
-            break;
-            
-            // right or down
-        case NSRightArrowFunctionKey:
-        case 0x7c:
-        case NSDownArrowFunctionKey:
-        case 0x7d:
-            [self nextSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
-            break;
-            
-        default:
-            NSLog(@"Unhandled keyDown: %@ (0x%x)", event.charactersIgnoringModifiers,  event.keyCode);
-    }
-}
-
 - (IBAction)present:(id)sender {
-    [self switchToPresentationMode];
+    [self switchToPresentationMode:NO];
 }
 
 - (IBAction)rehearse:(id)sender {
-    [self switchToRehearsalMode];
+    [self switchToPresentationMode:YES];
 }
 
 - (IBAction)openDocument:(id)sender {
@@ -188,6 +159,36 @@
     
     /* Slide indices start at 0. */
     [self gotoSlide:0 views:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+}
+
+- (void)keyDown:(NSEvent *)event {
+    NSLog(@"keyDown: %@ (0x%x)", event.charactersIgnoringModifiers,  event.keyCode);
+    // TODO: replace keys by constants, but where are they defined?
+    switch (event.keyCode) {
+            // escape
+        case 0x35:
+            [self switchToOrganizerMode];
+            break;
+            
+            // up or left
+        case NSUpArrowFunctionKey:
+        case 0x7e:
+        case NSLeftArrowFunctionKey:
+        case 0x7b:
+            [self previousSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+            break;
+            
+            // right or down
+        case NSRightArrowFunctionKey:
+        case 0x7c:
+        case NSDownArrowFunctionKey:
+        case 0x7d:
+            [self nextSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+            break;
+            
+        default:
+            NSLog(@"Unhandled keyDown: %@ (0x%x)", event.charactersIgnoringModifiers,  event.keyCode);
+    }
 }
 
 
@@ -221,22 +222,19 @@
     [self.organizerWindow orderFront:self];
 }
 
-/* Presentation mode always shows at least the public window. If there is no second screen, the slides are shown on the primary screen assuming that other people are watching and no comments, etc. are visible. */
-- (void)switchToPresentationMode {
-    if (SINGLE_SCREEN_TEST || [[NSScreen screens] count] >= 2) {
+/* Presentation mode always shows at least the public window. If there is no second screen, the slides are shown on the primary screen assuming that other people are watching and no comments, etc. are visible. Rehearsal mode is like presentation mode, but always shows at least the private window. If there is no second screen, the user still wants to see his comments, etc. */
+- (void)switchToPresentationMode:(BOOL)rehearse {
+    if ([[NSScreen screens] count] >= 2) {
         [self showPrivateAndPublicWindow];
+    } else if (rehearse) {
+        [self showPrivateWindowOnly];
     } else {
         [self showPublicWindowOnly];
     }
-}
-
-/* Rehearsal mode is like presentation mode, but always shows at least the private window. If there is no second screen, the user still wants to see his comments, etc. */
-- (void)switchToRehearsalMode {
-    if (SINGLE_SCREEN_TEST || [[NSScreen screens] count] >= 2) {
-        [self showPrivateAndPublicWindow];
-    } else {
-        [self showPrivateWindowOnly];
-    }
+    
+    /* Set first responder to catch key events. This can only be done once the windows are shown and this may be the first time. */
+    [self.publicWindow makeFirstResponder:self];
+    [self.privateWindow makeFirstResponder:self];
 }
 
 // TODO: Deal with more than 2 screens by selecting 1 as the private and all others as public. You can cycle through the screen to select one as private.
@@ -245,21 +243,12 @@
 - (void)showPrivateWindowOnly {
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
-    //[self layoutPrivateWindow];
-    
-    /* Set first responder to catch key events. */
-    [self.publicWindow makeFirstResponder:self];
-    [self.privateWindow makeFirstResponder:self];
 }
 
 /* Assumes there is only one screen. */
 - (void)showPublicWindowOnly {
     [self.organizerWindow orderOut:self];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
-    
-    /* Set first responder to catch key events. */
-    [self.publicWindow makeFirstResponder:self];
-    [self.privateWindow makeFirstResponder:self];
 }
 
 /* Assumes there are two screens. */
@@ -267,22 +256,13 @@
     [self.organizerWindow orderOut:self];
     [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
-    //[self layoutPrivateWindow];
-    
-    /* Set first responder to catch key events. */
-    [self.publicWindow makeFirstResponder:self];
-    [self.privateWindow makeFirstResponder:self];
 }
 
 - (void)showWindow:(NSWindow *)window fullScreenOn:(NSScreen *)screen {
-    if (SINGLE_SCREEN_TEST) {
-        [window orderFront:self];
-    } else {
-        NSRect rect = [screen visibleFrame];
-        [window setFrame:rect display:YES];
-        [window orderFront:self];
-        [window toggleFullScreen:self];
-    }
+    //NSRect rect = [screen visibleFrame];
+    //[window setFrame:rect display:YES];
+    [window orderFront:self];
+    [window toggleFullScreen:self];
 }
 
 

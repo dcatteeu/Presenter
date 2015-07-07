@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
         <plugIn identifier="com.apple.pdfkit.ibplugin" version="7706"/>
@@ -22,7 +22,7 @@
                 <outlet property="organizerWindow" destination="QvC-M9-y7g" id="QCm-16-tu5"/>
                 <outlet property="pdfView" destination="HD5-M1-63u" id="1vz-zt-TWu"/>
                 <outlet property="privateWindow" destination="fBz-cl-p1l" id="ZJ2-Hm-UXM"/>
-                <outlet property="publicPdfView" destination="0hM-jf-ByC" id="Sdb-DH-8nK"/>
+                <outlet property="publicSlideView" destination="N3E-np-OW5" id="ifl-bt-EPv"/>
                 <outlet property="publicWindow" destination="oEc-kt-jZZ" id="WhE-cm-gla"/>
             </connections>
         </customObject>
@@ -753,19 +753,19 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="480" height="270"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-            <view key="contentView" id="6Tp-5d-r9l">
+            <view key="contentView" id="6Tp-5d-r9l" userLabel="View">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0hM-jf-ByC">
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N3E-np-OW5" customClass="SlideView">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                     </pdfView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="0hM-jf-ByC" firstAttribute="top" secondItem="6Tp-5d-r9l" secondAttribute="top" id="8Eq-zK-d1M"/>
-                    <constraint firstItem="0hM-jf-ByC" firstAttribute="leading" secondItem="6Tp-5d-r9l" secondAttribute="leading" id="LwA-fE-e1N"/>
-                    <constraint firstAttribute="trailing" secondItem="0hM-jf-ByC" secondAttribute="trailing" id="RNH-vG-RKx"/>
-                    <constraint firstAttribute="bottom" secondItem="0hM-jf-ByC" secondAttribute="bottom" id="rVm-oJ-68L"/>
+                    <constraint firstAttribute="bottom" secondItem="N3E-np-OW5" secondAttribute="bottom" id="73B-E8-mcn"/>
+                    <constraint firstItem="N3E-np-OW5" firstAttribute="top" secondItem="6Tp-5d-r9l" secondAttribute="top" id="HHb-rd-nbH"/>
+                    <constraint firstAttribute="trailing" secondItem="N3E-np-OW5" secondAttribute="trailing" id="HOA-yc-SJ3"/>
+                    <constraint firstItem="N3E-np-OW5" firstAttribute="leading" secondItem="6Tp-5d-r9l" secondAttribute="leading" id="HUI-Lw-dya"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="303" y="826"/>
@@ -780,7 +780,7 @@
                 <rect key="frame" x="-1" y="-1" width="921" height="692"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn">
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn" customClass="SlideView">
                         <rect key="frame" x="557" y="312" width="344" height="258"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="1Zn-jX-y9W"/>
@@ -796,7 +796,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH">
+                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH" customClass="SlideView">
                         <rect key="frame" x="20" y="248" width="517" height="387"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="4:3" id="7sQ-qG-eOV"/>

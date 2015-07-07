@@ -13,6 +13,7 @@
 		524DF9551AC9A3AC006D661B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 524DF9531AC9A3AC006D661B /* MainMenu.xib */; };
 		524DF9611AC9A3AC006D661B /* PresenterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 524DF9601AC9A3AC006D661B /* PresenterTests.m */; };
 		524DF96B1AC9AFDE006D661B /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 524DF96A1AC9AFDE006D661B /* Quartz.framework */; };
+		529198051B495C7A00FACD3D /* SlideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 529198041B495C7A00FACD3D /* SlideView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,8 @@
 		524DF95F1AC9A3AC006D661B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		524DF9601AC9A3AC006D661B /* PresenterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PresenterTests.m; sourceTree = "<group>"; };
 		524DF96A1AC9AFDE006D661B /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		529198031B495C7A00FACD3D /* SlideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideView.h; sourceTree = "<group>"; };
+		529198041B495C7A00FACD3D /* SlideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +88,8 @@
 				524DF9511AC9A3AC006D661B /* Images.xcassets */,
 				524DF9531AC9A3AC006D661B /* MainMenu.xib */,
 				524DF94A1AC9A3AC006D661B /* Supporting Files */,
+				529198031B495C7A00FACD3D /* SlideView.h */,
+				529198041B495C7A00FACD3D /* SlideView.m */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -214,6 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				529198051B495C7A00FACD3D /* SlideView.m in Sources */,
 				524DF9501AC9A3AC006D661B /* main.m in Sources */,
 				524DF94E1AC9A3AC006D661B /* AppDelegate.m in Sources */,
 			);
