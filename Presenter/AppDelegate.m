@@ -214,8 +214,14 @@
 
 /* In organizer mode only the organizer window is visible while the public and private window are hidden. */
 - (void)switchToOrganizerMode {
+    if (self.publicWindow.styleMask & NSFullScreenWindowMask) {
+        [self.publicWindow toggleFullScreen:self];
+    }
     [self.publicWindow setLevel:NSNormalWindowLevel];
     [self.publicWindow orderOut:self];
+    if (self.privateWindow.styleMask & NSFullScreenWindowMask) {
+        [self.privateWindow toggleFullScreen:self];
+    }
     [self.privateWindow setLevel:NSNormalWindowLevel];
     [self.privateWindow orderOut:self];
     [self.organizerWindow setLevel:NSNormalWindowLevel];
