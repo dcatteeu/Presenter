@@ -154,8 +154,10 @@
 - (void)loadPdf {
     for (PDFView* pdfView in self.pdfViews) {
         [pdfView setDocument:self.pdf];
+        [pdfView setDisplayMode:kPDFDisplaySinglePage];
     }
     [self.nextPdfView setDocument:self.pdf];
+    [self.nextPdfView setDisplayMode:kPDFDisplaySinglePage];
     
     /* Slide indices start at 0. */
     [self gotoSlide:0 views:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
