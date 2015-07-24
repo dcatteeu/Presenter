@@ -39,7 +39,8 @@
 @property (weak) IBOutlet SlideView *currentPdfView;
 @property (weak) IBOutlet SlideView *nextPdfView;
 @property (weak) IBOutlet SlideView *publicSlideView;
-@property NSArray *pdfViews;
+@property NSArray *allPdfViews;
+@property NSArray *allButOneAheadPdfView;
 
 /* This PDF is used by the oneAheadView to show a black slide when at the end of the presentation. */
 @property PDFDocument *blackPdf;
@@ -88,7 +89,8 @@
     [self registerDefaults];
     
     /* Put all pdf views in an array for bulk processing. */
-    self.pdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentPdfView, nil];
+    self.allPdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentPdfView, self.nextPdfView, nil];
+    self.allButOneAheadPdfView = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentPdfView, nil];
     
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
@@ -152,15 +154,15 @@
 }
 
 - (void)loadPdf {
-    for (PDFView* pdfView in self.pdfViews) {
+    for (PDFView* pdfView in self.allPdfViews) {
         [pdfView setDocument:self.pdf];
         [pdfView setDisplayMode:kPDFDisplaySinglePage];
+        [pdfView setAutoScales:YES];
+        [pdfView setDisplaysPageBreaks:NO];
     }
-    [self.nextPdfView setDocument:self.pdf];
-    [self.nextPdfView setDisplayMode:kPDFDisplaySinglePage];
     
     /* Slide indices start at 0. */
-    [self gotoSlide:0 views:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+    [self gotoSlide:0 views:self.allButOneAheadPdfView oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
 }
 
 - (void)keyDown:(NSEvent *)event {
@@ -177,7 +179,7 @@
         case 0x7e:
         case NSLeftArrowFunctionKey:
         case 0x7b:
-            [self previousSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+            [self previousSlide:self.allButOneAheadPdfView oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
             break;
             
             // right or down
@@ -185,7 +187,7 @@
         case 0x7c:
         case NSDownArrowFunctionKey:
         case 0x7d:
-            [self nextSlide:self.pdfViews oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+            [self nextSlide:self.allButOneAheadPdfView oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
             break;
             
         default:
