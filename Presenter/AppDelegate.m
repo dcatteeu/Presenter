@@ -36,8 +36,6 @@
 
 @property PDFDocument *pdf;
 @property (weak) IBOutlet PDFView *pdfView;
-@property (weak) IBOutlet SlideView *currentPdfView;
-@property (weak) IBOutlet SlideView *nextPdfView;
 @property (weak) IBOutlet SlideView *publicSlideView;
 @property NSArray *allPdfViews;
 @property NSArray *allButOneAheadPdfView;
@@ -45,8 +43,11 @@
 /* This PDF is used by the oneAheadView to show a black slide when at the end of the presentation. */
 @property PDFDocument *blackPdf;
 
+/* Private window elements */
+@property (weak) IBOutlet SlideView *currentPdfView;
+@property (weak) IBOutlet SlideView *nextPdfView;
 @property (weak) IBOutlet NSTextField *currentSlideLabel;
-
+@property (weak) IBOutlet NSTextField *commentsTextField;
 
 - (IBAction)present:(id)sender;
 - (IBAction)rehearse:(id)sender;
@@ -304,6 +305,14 @@
         [pdfView goToPage:page];
     }
     
+    NSString *str = [NSString stringWithFormat:@""];
+    for (PDFAnnotation *annotation in [page annotations]) {
+        if ([annotation.type isEqualToString:@"Text"]) {
+            str = [str stringByAppendingString:annotation.contents];
+        }
+    }
+    [self.commentsTextField setStringValue:str];
+    
     /* To keep the oneAheadPdfView exactly one slide ahead, check whether, or not, we are at the end. */
     NSUInteger nextSlideIndex = slideIndex + 1;
     if (nextSlideIndex < pdf.pageCount) {
@@ -315,6 +324,8 @@
     }
     
     [self updateCurrentSlideLabel:label slide:slideIndex of:pdf.pageCount];
+    
+    
 }
 
 - (void)updateCurrentSlideLabel:(NSTextField *)label slide:(NSUInteger)currentSlideIndex of:(NSUInteger)slideCount {

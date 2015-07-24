@@ -16,6 +16,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="commentsTextField" destination="Qy2-Kt-zFA" id="Kat-to-FKL"/>
                 <outlet property="currentPdfView" destination="rSt-ZC-khH" id="dDh-aC-hXE"/>
                 <outlet property="currentSlideLabel" destination="i9n-0R-0cU" id="Ajy-q2-OW9"/>
                 <outlet property="nextPdfView" destination="kTe-dX-JAn" id="xOw-rb-S45"/>
@@ -774,22 +775,20 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="158" width="921" height="692"/>
+            <rect key="contentRect" x="131" y="158" width="921" height="649"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="dek-K2-Rvc">
-                <rect key="frame" x="-1" y="-1" width="921" height="692"/>
+                <rect key="frame" x="0.0" y="0.0" width="921" height="649"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn" customClass="SlideView">
-                        <rect key="frame" x="557" y="312" width="344" height="258"/>
+                        <rect key="frame" x="523.5" y="269" width="377.5" height="258"/>
                         <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="1Zn-jX-y9W"/>
                             <constraint firstAttribute="width" secondItem="kTe-dX-JAn" secondAttribute="height" multiplier="4:3" id="BhR-Jq-1sL"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="95" id="D0F-B4-pfL"/>
                         </constraints>
                     </pdfView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9n-0R-0cU">
-                        <rect key="frame" x="174" y="643" width="208" height="29"/>
+                        <rect key="frame" x="157" y="600" width="208" height="29"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Current: Slide i of n" usesSingleLineMode="YES" id="7Ew-YH-EiB">
                             <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -797,13 +796,23 @@
                         </textFieldCell>
                     </textField>
                     <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH" customClass="SlideView">
-                        <rect key="frame" x="20" y="248" width="517" height="387"/>
+                        <rect key="frame" x="20" y="205" width="484.5" height="387"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="4:3" id="7sQ-qG-eOV"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="144" id="Msv-GT-JSE"/>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="auZ-da-FRo"/>
                         </constraints>
                     </pdfView>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qy2-Kt-zFA">
+                        <rect key="frame" x="0.0" y="0.0" width="921" height="185"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="185" id="4UO-Du-hkY"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="MJU-se-t0a">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="rSt-ZC-khH" firstAttribute="centerY" secondItem="kTe-dX-JAn" secondAttribute="centerY" id="4ie-hg-8uz"/>
@@ -811,9 +820,13 @@
                     <constraint firstItem="rSt-ZC-khH" firstAttribute="leading" secondItem="dek-K2-Rvc" secondAttribute="leading" constant="20" id="8wx-d6-i3B"/>
                     <constraint firstAttribute="trailing" secondItem="kTe-dX-JAn" secondAttribute="trailing" constant="20" id="9F9-Cr-wgk"/>
                     <constraint firstItem="rSt-ZC-khH" firstAttribute="top" secondItem="i9n-0R-0cU" secondAttribute="bottom" constant="8" id="Cly-5k-7cT"/>
+                    <constraint firstAttribute="trailing" secondItem="Qy2-Kt-zFA" secondAttribute="trailing" id="LPC-f6-gBn"/>
+                    <constraint firstAttribute="bottom" secondItem="Qy2-Kt-zFA" secondAttribute="bottom" id="PcR-lH-05r"/>
                     <constraint firstItem="kTe-dX-JAn" firstAttribute="leading" secondItem="rSt-ZC-khH" secondAttribute="trailing" constant="20" id="QMB-LT-uCx"/>
                     <constraint firstItem="i9n-0R-0cU" firstAttribute="top" secondItem="dek-K2-Rvc" secondAttribute="top" constant="20" id="RZ1-Fl-3Ka"/>
+                    <constraint firstItem="Qy2-Kt-zFA" firstAttribute="top" secondItem="rSt-ZC-khH" secondAttribute="bottom" constant="20" id="Ugp-BW-EE2"/>
                     <constraint firstItem="rSt-ZC-khH" firstAttribute="width" secondItem="kTe-dX-JAn" secondAttribute="width" multiplier="3:2" id="edF-va-Wlb"/>
+                    <constraint firstItem="Qy2-Kt-zFA" firstAttribute="leading" secondItem="dek-K2-Rvc" secondAttribute="leading" id="vCb-2l-DqA"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="165.5" y="1388"/>
