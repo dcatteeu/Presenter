@@ -782,13 +782,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn" customClass="SlideView">
-                        <rect key="frame" x="523.5" y="269" width="377.5" height="258"/>
+                        <rect key="frame" x="557" y="269" width="343.5" height="258"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="kTe-dX-JAn" secondAttribute="height" multiplier="4:3" id="BhR-Jq-1sL"/>
                         </constraints>
                     </pdfView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9n-0R-0cU">
-                        <rect key="frame" x="157" y="600" width="208" height="29"/>
+                        <rect key="frame" x="174" y="600" width="208" height="29"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Current: Slide i of n" usesSingleLineMode="YES" id="7Ew-YH-EiB">
                             <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -796,7 +796,7 @@
                         </textFieldCell>
                     </textField>
                     <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH" customClass="SlideView">
-                        <rect key="frame" x="20" y="205" width="484.5" height="387"/>
+                        <rect key="frame" x="20" y="205" width="517" height="387"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="4:3" id="7sQ-qG-eOV"/>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="auZ-da-FRo"/>

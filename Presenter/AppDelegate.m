@@ -270,8 +270,8 @@
 }
 
 - (void)showWindow:(NSWindow *)window fullScreenOn:(NSScreen *)screen {
-    //NSRect rect = [screen visibleFrame];
-    //[window setFrame:rect display:YES];
+    NSRect rect = [screen visibleFrame];
+    [window setFrame:rect display:YES];
     [window orderFront:self];
     [window toggleFullScreen:self];
 }
