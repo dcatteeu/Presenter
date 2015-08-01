@@ -25,7 +25,12 @@
 #import "AppDelegate.h"
 #import "SlideView.h"
 
+static BOOL FULLSCREEN = YES;
+typedef enum { stateOrganize, stateWait, statePresent } State;
+
 @interface AppDelegate ()
+
+@property State state;
 
 @property NSUInteger privateScreenIndex;
 @property NSUInteger publicScreenIndex;
@@ -40,14 +45,19 @@
 @property NSArray *allPdfViews;
 @property NSArray *allButOneAheadPdfView;
 
-/* This PDF is used by the oneAheadView to show a black slide when at the end of the presentation. */
+/* This PDF is used by the oneAheadSlideView to show a black slide when at the end of the presentation. */
 @property PDFDocument *blackPdf;
 
 /* Private window elements */
-@property (weak) IBOutlet SlideView *currentPdfView;
-@property (weak) IBOutlet SlideView *nextPdfView;
+@property (weak) IBOutlet NSTextField *clockLabel;
+@property (weak) IBOutlet NSTextField *runningTimeLabel;
+@property NSTimeInterval startTime;
+@property NSTimer *timer;
 @property (weak) IBOutlet NSTextField *currentSlideLabel;
-@property (weak) IBOutlet NSTextField *commentsTextField;
+@property (weak) IBOutlet SlideView *currentSlideView;
+@property (weak) IBOutlet NSTextField *oneAheadSlideLabel;
+@property (weak) IBOutlet SlideView *oneAheadSlideView;
+@property (weak) IBOutlet NSTextField *notesTextField;
 
 - (IBAction)present:(id)sender;
 - (IBAction)rehearse:(id)sender;
@@ -90,8 +100,8 @@
     [self registerDefaults];
     
     /* Put all pdf views in an array for bulk processing. */
-    self.allPdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentPdfView, self.nextPdfView, nil];
-    self.allButOneAheadPdfView = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentPdfView, nil];
+    self.allPdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentSlideView, self.oneAheadSlideView, nil];
+    self.allButOneAheadPdfView = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentSlideView, nil];
     
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
@@ -163,7 +173,7 @@
     }
     
     /* Slide indices start at 0. */
-    [self gotoSlide:0 views:self.allButOneAheadPdfView oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+    [self gotoSlide:0 views:self.allButOneAheadPdfView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
 }
 
 - (void)keyDown:(NSEvent *)event {
@@ -180,7 +190,10 @@
         case 0x7e:
         case NSLeftArrowFunctionKey:
         case 0x7b:
-            [self previousSlide:self.allButOneAheadPdfView oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+            if (self.state == stateWait) {
+                [self startPresenting];
+            }
+            [self previousSlide:self.allButOneAheadPdfView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
             break;
             
             // right or down
@@ -188,7 +201,10 @@
         case 0x7c:
         case NSDownArrowFunctionKey:
         case 0x7d:
-            [self nextSlide:self.allButOneAheadPdfView oneAheadPdfView:self.nextPdfView label:self.currentSlideLabel];
+            if (self.state == stateWait) {
+                [self startPresenting];
+            }
+            [self nextSlide:self.allButOneAheadPdfView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
             break;
             
         default:
@@ -219,28 +235,37 @@
 
 /* In organizer mode only the organizer window is visible while the public and private window are hidden. */
 - (void)switchToOrganizerMode {
+    [self.timer invalidate];
+    self.state = stateOrganize;
+    
     if (self.publicWindow.styleMask & NSFullScreenWindowMask) {
         [self.publicWindow toggleFullScreen:self];
     }
     [self.publicWindow setLevel:NSNormalWindowLevel];
     [self.publicWindow orderOut:self];
+    
     if (self.privateWindow.styleMask & NSFullScreenWindowMask) {
         [self.privateWindow toggleFullScreen:self];
     }
     [self.privateWindow setLevel:NSNormalWindowLevel];
     [self.privateWindow orderOut:self];
+    
     [self.organizerWindow setLevel:NSNormalWindowLevel];
     [self.organizerWindow orderFront:self];
 }
 
 /* Presentation mode always shows at least the public window. If there is no second screen, the slides are shown on the primary screen assuming that other people are watching and no comments, etc. are visible. Rehearsal mode is like presentation mode, but always shows at least the private window. If there is no second screen, the user still wants to see his comments, etc. */
 - (void)switchToPresentationMode:(BOOL)rehearse {
+    self.state = stateWait;
+    
     if ([[NSScreen screens] count] >= 2) {
         [self showPrivateAndPublicWindow];
+        [self updateTimeLabels:nil];
     } else if (rehearse) {
         [self showPrivateWindowOnly];
     } else {
         [self showPublicWindowOnly];
+        [self updateTimeLabels:nil];
     }
     
     /* Set first responder to catch key events. This can only be done once the windows are shown and this may be the first time. */
@@ -273,7 +298,67 @@
     NSRect rect = [screen visibleFrame];
     [window setFrame:rect display:YES];
     [window orderFront:self];
-    [window toggleFullScreen:self];
+    if (FULLSCREEN) {
+        [window toggleFullScreen:self];
+    }
+}
+
+- (void)updateTimeLabels:(NSTimer *)timer {
+    /* Update only when in presentation mode. */
+    if (self.state == stateOrganize) {
+        return;
+    }
+    
+    NSDate *now = [[NSDate alloc] init];
+    [self updateClock:now label:self.clockLabel];
+    
+    CFTimeInterval runningTime = 0;
+    if (self.state == statePresent) {
+        runningTime = CACurrentMediaTime() - self.startTime;
+    }
+    [self updateRunningTime:runningTime label:self.runningTimeLabel];
+    
+    /* To poll at the correct moment, schedule a timer at the next second. Add 1.5 seconds and round down to the second. */
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDate *next = [now dateByAddingTimeInterval:1.5];
+    NSDateComponents *comps = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:now];
+    next = [cal dateFromComponents:comps];
+    
+#ifndef NDEBUG
+    comps = [cal components:NSCalendarUnitNanosecond fromDate:next];
+    assert(comps.nanosecond == 0);
+#endif
+    
+    timer = [[NSTimer alloc] initWithFireDate:next interval:0 target:self selector:@selector(updateTimeLabels:) userInfo:nil repeats:NO];
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    [runLoop addTimer:timer forMode:NSDefaultRunLoopMode];
+}
+
+- (void)updateClock:(NSDate *)date label:(NSTextField *)label {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    NSString *timeAsString = [dateFormatter stringFromDate:date];
+    [label setStringValue:timeAsString];
+}
+
+- (void)updateRunningTime:(NSUInteger) timeInterval label:(NSTextField *)label {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    NSDateComponents *runningTimeComponents = [[NSDateComponents alloc] init];
+    NSUInteger secondsPerMinute = 60;
+    NSUInteger minutesPerHour = 60;
+    runningTimeComponents.second = timeInterval % secondsPerMinute;
+    timeInterval = timeInterval / secondsPerMinute;
+    runningTimeComponents.minute = timeInterval % minutesPerHour;
+    timeInterval = timeInterval / minutesPerHour;
+    runningTimeComponents.hour = timeInterval;
+    NSString *runningTimeAsString = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)runningTimeComponents.hour, (long)runningTimeComponents.minute, (long)runningTimeComponents.second];
+    [label setStringValue:runningTimeAsString];
+}
+
+- (void)startPresenting {
+    self.startTime = CACurrentMediaTime();
+    self.state = statePresent;
 }
 
 
@@ -305,13 +390,17 @@
         [pdfView goToPage:page];
     }
     
+    /* Concatenate all text annotations with an empty line in between and show as this slide's notes. */
     NSString *str = [NSString stringWithFormat:@""];
     for (PDFAnnotation *annotation in [page annotations]) {
         if ([annotation.type isEqualToString:@"Text"]) {
+            if ([str isNotEqualTo:@""]) {
+                str = [str stringByAppendingString:@"\n\n"];
+            }
             str = [str stringByAppendingString:annotation.contents];
         }
     }
-    [self.commentsTextField setStringValue:str];
+    [self.notesTextField setStringValue:str];
     
     /* To keep the oneAheadPdfView exactly one slide ahead, check whether, or not, we are at the end. */
     NSUInteger nextSlideIndex = slideIndex + 1;
@@ -319,18 +408,13 @@
         [oneAheadPdfView setDocument:pdf];
         page = [pdf pageAtIndex:nextSlideIndex];
         [oneAheadPdfView goToPage:page];
+        [self.oneAheadSlideLabel setStringValue:[NSString stringWithFormat:@"Next: Slide %lu of %lu", 1 + nextSlideIndex, pdf.pageCount]];
     } else {
         [oneAheadPdfView setDocument:self.blackPdf];
+        [self.oneAheadSlideLabel setStringValue:[NSString stringWithFormat:@"End of Show"]];
     }
     
-    [self updateCurrentSlideLabel:label slide:slideIndex of:pdf.pageCount];
-    
-    
-}
-
-- (void)updateCurrentSlideLabel:(NSTextField *)label slide:(NSUInteger)currentSlideIndex of:(NSUInteger)slideCount {
-    NSString *string = [NSString stringWithFormat:@"Current: Slide %lu of %lu", 1 + currentSlideIndex, slideCount];
-    [label setStringValue:string];
+    [label setStringValue:[NSString stringWithFormat:@"Current: Slide %lu of %lu", 1 + slideIndex, pdf.pageCount]];
 }
 
 - (NSUInteger)currentSlideIndex:(PDFView *)view {

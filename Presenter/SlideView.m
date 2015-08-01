@@ -10,9 +10,23 @@
 
 @implementation SlideView
 
+- (BOOL)acceptsFirstResponder {
+    return NO;
+}
+
+- (void)keyDown:(NSEvent *)theEvent {
+    // Ignore but override to avoid the PDFViews from handling these events.
+    NSLog(@"keyDown");
+}
+
 - (void)keyUp:(NSEvent *)theEvent {
     // Ignore but override to avoid the PDFViews from handling these events.
     NSLog(@"keyUp");
+}
+
+- (void)magnifyWithEvent:(NSEvent *)event {
+    // Ignore but override to avoid the PDFViews from handling these events.
+    NSLog(@"magnifyWithEvent");
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
@@ -76,9 +90,13 @@
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent {
-    NSLog(@"scrollWheel");
     // Ignore but override to avoid the PDFViews from handling these events.
     NSLog(@"scrollWheel");
+}
+
+- (void)swipeWithEvent:(NSEvent *)event {
+    // Ignore but override to avoid the PDFViews from handling these events.
+    NSLog(@"swipeWithEvent");
 }
 
 @end
