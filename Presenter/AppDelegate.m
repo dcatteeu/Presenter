@@ -24,6 +24,7 @@
 
 #import "AppDelegate.h"
 #import "SlideView.h"
+#import "ColoredView.h"
 
 static BOOL FULLSCREEN = YES;
 typedef enum { stateOrganize, stateWait, statePresent } State;
@@ -49,6 +50,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 @property PDFDocument *blackPdf;
 
 /* Private window elements */
+@property (weak) IBOutlet ColoredView *backgroundView;
 @property (weak) IBOutlet NSTextField *clockLabel;
 @property (weak) IBOutlet NSTextField *runningTimeLabel;
 @property NSTimeInterval startTime;
