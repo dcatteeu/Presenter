@@ -26,7 +26,7 @@
 #import "SlideView.h"
 #import "ColoredView.h"
 
-static BOOL FULLSCREEN = YES;
+static BOOL FULLSCREEN = NO;
 typedef enum { stateOrganize, stateWait, statePresent } State;
 
 @interface AppDelegate ()
@@ -51,6 +51,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 
 /* Private window elements */
 @property (weak) IBOutlet ColoredView *backgroundView;
+@property (weak) IBOutlet ColoredView *clocksView;
 @property (weak) IBOutlet NSTextField *clockLabel;
 @property (weak) IBOutlet NSTextField *runningTimeLabel;
 @property NSTimeInterval startTime;
@@ -273,6 +274,8 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     /* Set first responder to catch key events. This can only be done once the windows are shown and this may be the first time. */
     [self.publicWindow makeFirstResponder:self];
     [self.privateWindow makeFirstResponder:self];
+    
+    //[self.clocksView setColor:[NSColor blueColor]];
 }
 
 // TODO: Deal with more than 2 screens by selecting 1 as the private and all others as public. You can cycle through the screen to select one as private.
