@@ -395,7 +395,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
         [pdfView goToPage:page];
     }
     
-    /* Concatenate all text annotations with an empty line in between and show as this slide's notes. */
+    /* Concatenate all text annotations with an empty line in between and show as this slide's notes. Disable the corresponding widgets. */
     NSString *str = [NSString stringWithFormat:@""];
     for (PDFAnnotation *annotation in [page annotations]) {
         if ([annotation.type isEqualToString:@"Text"]) {
@@ -403,6 +403,8 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
                 str = [str stringByAppendingString:@"\n\n"];
             }
             str = [str stringByAppendingString:annotation.contents];
+            
+            [annotation setShouldDisplay:NO];
         }
     }
     [self.notesTextField setStringValue:str];

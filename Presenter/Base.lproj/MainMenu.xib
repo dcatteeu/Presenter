@@ -789,7 +789,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="921" height="777"/>
                         <subviews>
                             <customView horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nj4-EO-AYp" customClass="ColoredView">
-                                <rect key="frame" x="200" y="720" width="522" height="57"/>
+                                <rect key="frame" x="199" y="720" width="522" height="57"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="xqb-mv-HPb">
                                         <rect key="frame" x="-2" y="0.0" width="190" height="57"/>
@@ -818,38 +818,11 @@
                                     <constraint firstItem="MGo-7S-ulR" firstAttribute="top" secondItem="nj4-EO-AYp" secondAttribute="top" id="l6D-WO-VYJ"/>
                                 </constraints>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="tQe-N3-A8Z">
-                                <rect key="frame" x="20" y="295" width="507" height="417"/>
-                                <subviews>
-                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9n-0R-0cU">
-                                        <rect key="frame" x="149.5" y="388" width="208" height="29"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Current: Slide i of n" usesSingleLineMode="YES" id="7Ew-YH-EiB">
-                                            <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
-                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <pdfView identifier="slideViewCurrent" autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="240" verticalHuggingPriority="240" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="200" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH" customClass="SlideView">
-                                        <rect key="frame" x="0.0" y="0.0" width="507" height="380"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="4:3" id="MKf-hX-isY"/>
-                                        </constraints>
-                                    </pdfView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="centerX" secondItem="i9n-0R-0cU" secondAttribute="centerX" id="Hi3-Kv-RrZ"/>
-                                    <constraint firstAttribute="bottom" secondItem="rSt-ZC-khH" secondAttribute="bottom" id="TEN-eT-Hoy"/>
-                                    <constraint firstItem="i9n-0R-0cU" firstAttribute="top" secondItem="tQe-N3-A8Z" secondAttribute="top" id="a0t-3p-rmp"/>
-                                    <constraint firstItem="rSt-ZC-khH" firstAttribute="top" secondItem="i9n-0R-0cU" secondAttribute="bottom" constant="8" id="eeN-Df-7zC"/>
-                                    <constraint firstItem="rSt-ZC-khH" firstAttribute="leading" secondItem="tQe-N3-A8Z" secondAttribute="leading" id="lPX-yP-31y"/>
-                                    <constraint firstAttribute="trailing" secondItem="rSt-ZC-khH" secondAttribute="trailing" id="lz6-RW-2Kh"/>
-                                </constraints>
-                            </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="pCY-EE-xjD">
-                                <rect key="frame" x="547" y="409" width="354" height="303"/>
+                                <rect key="frame" x="546" y="409" width="354" height="303"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L5u-cA-Ggh">
-                                        <rect key="frame" x="87.5" y="274" width="179" height="29"/>
+                                        <rect key="frame" x="87" y="274" width="179" height="29"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Next: Slide i of n" usesSingleLineMode="YES" id="UEm-8W-DvG">
                                             <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -872,7 +845,7 @@
                                     <constraint firstAttribute="centerX" secondItem="L5u-cA-Ggh" secondAttribute="centerX" id="mEh-KZ-Su7"/>
                                 </constraints>
                             </customView>
-                            <textField horizontalHuggingPriority="100" verticalHuggingPriority="100" horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="Qy2-Kt-zFA">
+                            <textField horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Qy2-Kt-zFA">
                                 <rect key="frame" x="0.0" y="0.0" width="921" height="194"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="Notes" drawsBackground="YES" id="MJU-se-t0a">
                                     <font key="font" size="36" name=".HelveticaNeueDeskInterface-Regular"/>
@@ -880,16 +853,43 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="tQe-N3-A8Z">
+                                <rect key="frame" x="20" y="295" width="507" height="417"/>
+                                <subviews>
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9n-0R-0cU">
+                                        <rect key="frame" x="149" y="388" width="208" height="29"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Current: Slide i of n" usesSingleLineMode="YES" id="7Ew-YH-EiB">
+                                            <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <pdfView identifier="slideViewCurrent" autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="240" verticalHuggingPriority="240" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="200" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH" customClass="SlideView">
+                                        <rect key="frame" x="0.0" y="0.0" width="507" height="380"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="4:3" id="MKf-hX-isY"/>
+                                        </constraints>
+                                    </pdfView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="i9n-0R-0cU" secondAttribute="centerX" id="Hi3-Kv-RrZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="rSt-ZC-khH" secondAttribute="bottom" id="TEN-eT-Hoy"/>
+                                    <constraint firstItem="i9n-0R-0cU" firstAttribute="top" secondItem="tQe-N3-A8Z" secondAttribute="top" id="a0t-3p-rmp"/>
+                                    <constraint firstItem="rSt-ZC-khH" firstAttribute="top" secondItem="i9n-0R-0cU" secondAttribute="bottom" constant="8" id="eeN-Df-7zC"/>
+                                    <constraint firstItem="rSt-ZC-khH" firstAttribute="leading" secondItem="tQe-N3-A8Z" secondAttribute="leading" id="lPX-yP-31y"/>
+                                    <constraint firstAttribute="trailing" secondItem="rSt-ZC-khH" secondAttribute="trailing" id="lz6-RW-2Kh"/>
+                                </constraints>
+                            </customView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="pCY-EE-xjD" firstAttribute="top" secondItem="nj4-EO-AYp" secondAttribute="bottom" constant="8" id="6g4-d2-mlP"/>
                             <constraint firstItem="nj4-EO-AYp" firstAttribute="top" secondItem="gK1-9t-8UY" secondAttribute="top" id="8IC-Y6-aRf"/>
                             <constraint firstAttribute="trailing" secondItem="Qy2-Kt-zFA" secondAttribute="trailing" id="TMX-IU-2of"/>
-                            <constraint firstItem="Qy2-Kt-zFA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pCY-EE-xjD" secondAttribute="bottom" constant="20" id="Vle-VY-a9a"/>
+                            <constraint firstItem="Qy2-Kt-zFA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pCY-EE-xjD" secondAttribute="bottom" priority="990" constant="20" id="Vle-VY-a9a"/>
                             <constraint firstAttribute="bottom" secondItem="Qy2-Kt-zFA" secondAttribute="bottom" id="VnN-op-2GC"/>
                             <constraint firstItem="Qy2-Kt-zFA" firstAttribute="height" secondItem="gK1-9t-8UY" secondAttribute="height" multiplier="1:4" priority="750" id="ZJv-cR-tZY"/>
                             <constraint firstAttribute="trailing" secondItem="pCY-EE-xjD" secondAttribute="trailing" constant="20" id="bfR-DZ-D4K"/>
-                            <constraint firstItem="Qy2-Kt-zFA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tQe-N3-A8Z" secondAttribute="bottom" constant="20" id="cGu-3v-brj"/>
+                            <constraint firstItem="Qy2-Kt-zFA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tQe-N3-A8Z" secondAttribute="bottom" priority="990" constant="20" id="cGu-3v-brj"/>
                             <constraint firstItem="tQe-N3-A8Z" firstAttribute="width" secondItem="gK1-9t-8UY" secondAttribute="width" multiplier="0.55" priority="750" id="fj9-A8-9Ik"/>
                             <constraint firstItem="tQe-N3-A8Z" firstAttribute="leading" secondItem="gK1-9t-8UY" secondAttribute="leading" constant="20" id="hdM-cN-Kmm"/>
                             <constraint firstItem="Qy2-Kt-zFA" firstAttribute="leading" secondItem="gK1-9t-8UY" secondAttribute="leading" id="jrf-Wj-y6j"/>
