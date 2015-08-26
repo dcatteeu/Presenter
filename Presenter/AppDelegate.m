@@ -43,11 +43,11 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 @property PDFDocument *pdf;
 @property (weak) IBOutlet PDFView *pdfView;
 @property (weak) IBOutlet SlideView *publicSlideView;
-@property NSArray *allPdfViews;
-@property NSArray *allButOneAheadPdfView;
+@property NSArray *allSlideViews;
+@property NSArray *allButOneAheadSlideView;
 
-/* This PDF is used by the oneAheadSlideView to show a black slide when at the end of the presentation. */
-@property PDFDocument *blackPdf;
+///* This PDF is used by the oneAheadSlideView to show a black slide when at the end of the presentation. */
+//@property PDFDocument *blackPdf;
 
 /* Private window elements */
 @property (weak) IBOutlet ColoredView *backgroundView;
@@ -57,10 +57,11 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 @property NSTimeInterval startTime;
 @property NSTimer *timer;
 @property (weak) IBOutlet NSTextField *currentSlideLabel;
-@property (weak) IBOutlet SlideView *currentSlideView;
+@property (weak) IBOutlet NSView *currentSlideView;
 @property (weak) IBOutlet NSTextField *oneAheadSlideLabel;
 @property (weak) IBOutlet SlideView *oneAheadSlideView;
 @property (weak) IBOutlet NSTextField *notesTextField;
+@property NSArray *notes;
 
 - (IBAction)present:(id)sender;
 - (IBAction)rehearse:(id)sender;
@@ -103,8 +104,8 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     [self registerDefaults];
     
     /* Put all pdf views in an array for bulk processing. */
-    self.allPdfViews = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentSlideView, self.oneAheadSlideView, nil];
-    self.allButOneAheadPdfView = [NSArray arrayWithObjects:self.pdfView, self.publicSlideView, self.currentSlideView, nil];
+    self.allSlideViews = [NSArray arrayWithObjects:self.publicSlideView, self.currentSlideView, self.oneAheadSlideView, nil];
+    self.allButOneAheadSlideView = [NSArray arrayWithObjects:self.publicSlideView, self.currentSlideView, nil];
     
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
@@ -127,7 +128,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
         [self loadPdf];
     }
     
-    self.blackPdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/black.pdf"]];;
+//    self.blackPdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/black.pdf"]];;
     
     [self switchToOrganizerMode];
 }
@@ -168,15 +169,37 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 }
 
 - (void)loadPdf {
-    for (PDFView* pdfView in self.allPdfViews) {
-        [pdfView setDocument:self.pdf];
-        [pdfView setDisplayMode:kPDFDisplaySinglePage];
-        [pdfView setAutoScales:YES];
-        [pdfView setDisplaysPageBreaks:NO];
+    [self.pdfView setDocument:self.pdf];
+    [self.pdfView setDisplayMode:kPDFDisplaySinglePage];
+    [self.pdfView setAutoScales:YES];
+    [self.pdfView setDisplaysPageBreaks:NO];
+    for (SlideView* slideView in self.allSlideViews) {
+        [slideView setPdfDocument:self.pdf];
+        [slideView setCurrentPageIndex:0];
     }
+    [self.oneAheadSlideView setCurrentPageIndex:1];
     
-    /* Slide indices start at 0. */
-    [self gotoSlide:0 views:self.allButOneAheadPdfView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
+//    /* Slide indices start at 0. */
+//    [self gotoSlide:0 views:self.allButOneAheadSlideView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
+    
+    /* Concatenate all text annotations with an empty line in between and show as this slide's notes. Disable the corresponding widgets. */
+    NSMutableArray *notes = [[NSMutableArray alloc] initWithCapacity:self.pdf.pageCount];
+    for (int i = 0; i < self.pdf.pageCount; i++) {
+        PDFPage *page = [self.pdf pageAtIndex:i];
+        NSString *str = [NSString stringWithFormat:@""];
+        for (PDFAnnotation *annotation in [page annotations]) {
+            if ([annotation.type isEqualToString:@"Text"]) {
+                if ([str isNotEqualTo:@""]) {
+                    str = [str stringByAppendingString:@"\n\n"];
+                }
+                str = [str stringByAppendingString:annotation.contents];
+                
+                [annotation setShouldDisplay:NO];
+            }
+        }
+        [notes setObject:str atIndexedSubscript:i];
+    }
+    self.notes = [NSArray arrayWithArray:notes];
 }
 
 - (void)keyDown:(NSEvent *)event {
@@ -196,7 +219,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
             if (self.state == stateWait) {
                 [self startPresenting];
             }
-            [self previousSlide:self.allButOneAheadPdfView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
+            [self previousSlide:self.allButOneAheadSlideView oneAheadSlideView:self.oneAheadSlideView label:self.currentSlideLabel];
             break;
             
             // right or down
@@ -207,7 +230,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
             if (self.state == stateWait) {
                 [self startPresenting];
             }
-            [self nextSlide:self.allButOneAheadPdfView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
+            [self nextSlide:self.allButOneAheadSlideView oneAheadSlideView:self.oneAheadSlideView label:self.currentSlideLabel];
             break;
             
         default:
@@ -266,9 +289,9 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
         [self updateTimeLabels:nil];
     } else if (rehearse) {
         [self showPrivateWindowOnly];
+        [self updateTimeLabels:nil];
     } else {
         [self showPublicWindowOnly];
-        [self updateTimeLabels:nil];
     }
     
     /* Set first responder to catch key events. This can only be done once the windows are shown and this may be the first time. */
@@ -276,6 +299,9 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     [self.privateWindow makeFirstResponder:self];
     
     //[self.clocksView setColor:[NSColor blueColor]];
+    [((ColoredView *)self.currentSlideView.superview) setColor:[NSColor blueColor]];
+    [((ColoredView *)self.oneAheadSlideView.superview) setColor:[NSColor greenColor]];
+    [self.privateWindow.childWindows[0] setNeedsDisplay:YES];
 }
 
 // TODO: Deal with more than 2 screens by selecting 1 as the private and all others as public. You can cycle through the screen to select one as private.
@@ -295,8 +321,8 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 /* Assumes there are two screens. */
 - (void)showPrivateAndPublicWindow {
     [self.organizerWindow orderOut:self];
-    [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
     [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
+    [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
 }
 
 - (void)showWindow:(NSWindow *)window fullScreenOn:(NSScreen *)screen {
@@ -372,62 +398,39 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
  * Implementation slide walking
  */
 
-- (void)nextSlide:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
-    NSUInteger nextPageNumber = [self currentSlideIndex:[pdfViews objectAtIndex:0]] + 1;
-    [self gotoSlide:nextPageNumber views:pdfViews oneAheadPdfView:oneAheadPdfView label:label];
+- (void)nextSlide:(NSArray *)slideViews oneAheadSlideView:(SlideView *)oneAheadSlideView label:(NSTextField *)label {
+    NSUInteger nextPageNumber = [[slideViews objectAtIndex:0] currentPageIndex] + 1;
+    [self gotoSlide:nextPageNumber views:slideViews oneAheadSlideView:oneAheadSlideView label:label];
 }
 
-- (void)previousSlide:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
-    NSUInteger previousPageNumber = [self currentSlideIndex:[pdfViews objectAtIndex:0]] - 1;
-    [self gotoSlide:previousPageNumber views:pdfViews oneAheadPdfView:oneAheadPdfView label:label];
+- (void)previousSlide:(NSArray *)slideViews oneAheadSlideView:(SlideView *)oneAheadSlideView label:(NSTextField *)label {
+    NSUInteger previousPageNumber = [[slideViews objectAtIndex:0] currentPageIndex] - 1;
+    [self gotoSlide:previousPageNumber views:slideViews oneAheadSlideView:oneAheadSlideView label:label];
 }
 
-/* Any page switch passes through this function. */
-- (void)gotoSlide:(NSUInteger)slideIndex views:(NSArray *)pdfViews oneAheadPdfView:(PDFView *)oneAheadPdfView label:(NSTextField *)label {
-    PDFDocument *pdf = [[pdfViews objectAtIndex:0] document];
-    if (slideIndex >= pdf.pageCount) {
+/* Any page switch passes through this function. TODO: Remove parameter label or add oneAheadLabel*/
+- (void)gotoSlide:(NSUInteger)slideIndex views:(NSArray *)slideViews oneAheadSlideView:(SlideView *)oneAheadSlideView label:(NSTextField *)label {
+    if (slideIndex >= self.pdf.pageCount) {
         return;
     }
     
-    /* PDF views do not allow to jump to a specific slide number. You can jump to a specific page. And you can find the page for a specific page number (called index) from the PDF document. */
-    PDFPage *page = [pdf pageAtIndex:slideIndex];
-    for (PDFView *pdfView in pdfViews) {
-        [pdfView goToPage:page];
-    }
+    // Notes
+    [self.notesTextField setStringValue:[self.notes objectAtIndex:slideIndex]];
     
-    /* Concatenate all text annotations with an empty line in between and show as this slide's notes. Disable the corresponding widgets. */
-    NSString *str = [NSString stringWithFormat:@""];
-    for (PDFAnnotation *annotation in [page annotations]) {
-        if ([annotation.type isEqualToString:@"Text"]) {
-            if ([str isNotEqualTo:@""]) {
-                str = [str stringByAppendingString:@"\n\n"];
-            }
-            str = [str stringByAppendingString:annotation.contents];
-            
-            [annotation setShouldDisplay:NO];
-        }
-    }
-    [self.notesTextField setStringValue:str];
-    
-    /* To keep the oneAheadPdfView exactly one slide ahead, check whether, or not, we are at the end. */
+    // SlideViews
     NSUInteger nextSlideIndex = slideIndex + 1;
-    if (nextSlideIndex < pdf.pageCount) {
-        [oneAheadPdfView setDocument:pdf];
-        page = [pdf pageAtIndex:nextSlideIndex];
-        [oneAheadPdfView goToPage:page];
-        [self.oneAheadSlideLabel setStringValue:[NSString stringWithFormat:@"Next: Slide %lu of %lu", 1 + nextSlideIndex, pdf.pageCount]];
+    for (SlideView *slideView in slideViews) {
+        [slideView setCurrentPageIndex:slideIndex];
+    }
+    [oneAheadSlideView setCurrentPageIndex:nextSlideIndex];
+    
+    // Labels above SlideViews (for humans, pages start at 1, for PDFDocument, they start at 0)
+    [self.currentSlideLabel setStringValue:[NSString stringWithFormat:@"Current: Slide %lu of %lu", 1 + slideIndex, self.pdf.pageCount]];
+    if (nextSlideIndex < self.pdf.pageCount) {
+        [self.oneAheadSlideLabel setStringValue:[NSString stringWithFormat:@"Next: Slide %lu of %lu", 1 + nextSlideIndex, self.pdf.pageCount]];
     } else {
-        [oneAheadPdfView setDocument:self.blackPdf];
         [self.oneAheadSlideLabel setStringValue:[NSString stringWithFormat:@"End of Show"]];
     }
-    
-    [label setStringValue:[NSString stringWithFormat:@"Current: Slide %lu of %lu", 1 + slideIndex, pdf.pageCount]];
-}
-
-- (NSUInteger)currentSlideIndex:(PDFView *)view {
-    PDFPage *currentPage = view.currentPage;
-    NSUInteger currentPageNumber = [view.document indexForPage:currentPage];
-    return currentPageNumber;
 }
 
 @end

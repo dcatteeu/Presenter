@@ -1,102 +1,95 @@
 //
 //  SlideView.m
-//  Presenter
+//  SlideView
 //
-//  Created by David Catteeuw on 05/07/15.
+//  Created by David Catteeuw on 21/08/15.
 //  Copyright (c) 2015 David R. Catteeuw. All rights reserved.
 //
 
 #import "SlideView.h"
 
+@interface SlideView ()
+@property NSSize maxPageSize;
+@end
+
 @implementation SlideView
 
-- (BOOL)acceptsFirstResponder {
-    return NO;
+@synthesize pdfDocument = _pdfDocument; // Necessary since we have a custom setter.
+
+- (CGFloat)aspectRatio {
+    return self.bounds.size.width / self.bounds.size.height;
 }
 
-- (void)keyDown:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"keyDown");
+- (void)awakeFromNib {
+    self.maxPageSize = NSMakeSize(0, 0);
 }
 
-- (void)keyUp:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"keyUp");
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    /* TODO: Remove debug code. */
+    [[NSColor redColor] set];
+    [NSBezierPath fillRect:dirtyRect];
+    NSLog(@"SlideView bounds: %.0f, %.0f, %.0f, %.0f", self.bounds.origin.x, self.bounds.origin.y, self.bounds.size.width, self.bounds.size.height);
+    
+    self.boundsSize = self.maxPageSize;
+    
+    if (self.pdfDocument) {
+        if (self.currentPageIndex < self.pdfDocument.pageCount) {
+            PDFPage *page = [self.pdfDocument pageAtIndex:self.currentPageIndex];
+            if (page) {
+                // TODO: Center the content if it is smaller than other pages?
+                [page drawWithBox:kPDFDisplayBoxMediaBox];
+            }
+        } else {
+            /* This may happen if the SlideView shows the next slide of the presentation, while the current slide is actually the last one PDFPage of the PDFDocument. */
+            [self.color set];
+            [NSBezierPath fillRect:dirtyRect];
+        }
+    }
 }
 
-- (void)magnifyWithEvent:(NSEvent *)event {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"magnifyWithEvent");
+//- (void)layout {
+//    
+//}
+
+- (void)setCurrentPageIndex:(NSUInteger)currentPageIndex {
+    _currentPageIndex = currentPageIndex;
+    
+    [self setNeedsDisplay:YES];
 }
 
-- (void)mouseDown:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"mouseDown");
-}
-
-- (void)mouseDragged:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"mouseDragged");
-}
-
-- (void)mouseEntered:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"mouseEntered");
-}
-
-- (void)mouseExited:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"mouseExited");
-}
-
-- (void)mouseMoved:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"mouseMoved");
-}
-
-- (void)mouseUp:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"mouseUp");
-}
-
-- (void)scrollLineDown:(id)sender {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollLineDown");
-}
-
-- (void)scrollLineUp:(id)sender {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollLineUp");
-}
-
-- (void)scrollPageDown:(id)sender {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollPageDown");
-}
-
-- (void)scrollPageUp:(id)sender {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollPageUp");
-}
-
-- (void)scrollToBeginningOfDocument:(id)sender {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollToBeginningOfDocument");
-}
-
-- (void)scrollToEndOfDocument:(id)sender {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollToEndOfDocument");
-}
-
-- (void)scrollWheel:(NSEvent *)theEvent {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"scrollWheel");
-}
-
-- (void)swipeWithEvent:(NSEvent *)event {
-    // Ignore but override to avoid the PDFViews from handling these events.
-    NSLog(@"swipeWithEvent");
+- (void)setPdfDocument:(PDFDocument *)pdfDocument {
+    _pdfDocument = pdfDocument;
+    
+    /* Initialize index. */
+    self.currentPageIndex = 0;
+    
+    /* Set bounds so that all PDFPages fall within. TODO: What with the origin? */
+    NSSize maxPageSize = NSMakeSize(0, 0);
+    for (int i = 0; i < self.pdfDocument.pageCount; i++) {
+        PDFPage *page = [self.pdfDocument pageAtIndex:self.currentPageIndex];
+        
+        NSRect pageBounds = [page boundsForBox:kPDFDisplayBoxMediaBox];
+        maxPageSize.height = MAX(maxPageSize.height, pageBounds.size.height);
+        maxPageSize.width = MAX(maxPageSize.width, pageBounds.size.width);
+    }
+    // TODO: set bounds once, then update if there is a change, for example, in layout?.
+    // TODO: The aspect ratio constraint of the SlideView should now be updated.
+    self.maxPageSize = maxPageSize;
+    self.boundsSize = maxPageSize;
+    
+//    /* Disable the widget of 'Text' annotations. */
+//    for (int i = 0; i < self.pdfDocument.pageCount; i++) {
+//        PDFPage *page = [self.pdfDocument pageAtIndex:self.currentPageIndex];
+//        for (PDFAnnotation *annotation in page.annotations) {
+//            if ([annotation.type isEqualToString:@"Text"]) {
+//                annotation.shouldDisplay = NO;
+//            }
+//        }
+//    }
+    
+    [self setNeedsDisplay:YES];
 }
 
 @end

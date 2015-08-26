@@ -20,14 +20,14 @@
                 <outlet property="clockLabel" destination="xqb-mv-HPb" id="CpY-4f-rbN"/>
                 <outlet property="clocksView" destination="nj4-EO-AYp" id="YpX-Pl-zr4"/>
                 <outlet property="currentSlideLabel" destination="i9n-0R-0cU" id="Ajy-q2-OW9"/>
-                <outlet property="currentSlideView" destination="rSt-ZC-khH" id="WpJ-72-AHW"/>
+                <outlet property="currentSlideView" destination="5cC-vb-QBv" id="2mm-pe-iSU"/>
                 <outlet property="notesTextField" destination="Qy2-Kt-zFA" id="PBj-og-lUA"/>
                 <outlet property="oneAheadSlideLabel" destination="L5u-cA-Ggh" id="3PA-c7-dB7"/>
-                <outlet property="oneAheadSlideView" destination="kTe-dX-JAn" id="C9g-86-HZD"/>
+                <outlet property="oneAheadSlideView" destination="QAU-LW-g0o" id="DSw-a9-jxI"/>
                 <outlet property="organizerWindow" destination="QvC-M9-y7g" id="QCm-16-tu5"/>
                 <outlet property="pdfView" destination="HD5-M1-63u" id="1vz-zt-TWu"/>
                 <outlet property="privateWindow" destination="fBz-cl-p1l" id="ZJ2-Hm-UXM"/>
-                <outlet property="publicSlideView" destination="N3E-np-OW5" id="ifl-bt-EPv"/>
+                <outlet property="publicSlideView" destination="BCX-8L-Wff" id="bvy-wr-lwV"/>
                 <outlet property="publicWindow" destination="oEc-kt-jZZ" id="WhE-cm-gla"/>
                 <outlet property="runningTimeLabel" destination="MGo-7S-ulR" id="fh9-oP-KZN"/>
             </connections>
@@ -762,15 +762,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N3E-np-OW5" customClass="SlideView">
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="BCX-8L-Wff" customClass="SlideView">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
-                    </pdfView>
+                    </customView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="N3E-np-OW5" secondAttribute="bottom" id="73B-E8-mcn"/>
-                    <constraint firstItem="N3E-np-OW5" firstAttribute="top" secondItem="6Tp-5d-r9l" secondAttribute="top" id="HHb-rd-nbH"/>
-                    <constraint firstAttribute="trailing" secondItem="N3E-np-OW5" secondAttribute="trailing" id="HOA-yc-SJ3"/>
-                    <constraint firstItem="N3E-np-OW5" firstAttribute="leading" secondItem="6Tp-5d-r9l" secondAttribute="leading" id="HUI-Lw-dya"/>
+                    <constraint firstAttribute="trailing" secondItem="BCX-8L-Wff" secondAttribute="trailing" id="Jq7-ci-h5J"/>
+                    <constraint firstItem="BCX-8L-Wff" firstAttribute="leading" secondItem="6Tp-5d-r9l" secondAttribute="leading" id="K8F-kK-11G"/>
+                    <constraint firstItem="BCX-8L-Wff" firstAttribute="top" secondItem="6Tp-5d-r9l" secondAttribute="top" id="ePb-a1-4gx"/>
+                    <constraint firstAttribute="bottom" secondItem="BCX-8L-Wff" secondAttribute="bottom" id="lHe-4j-URz"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="-70" y="811"/>
@@ -818,42 +818,7 @@
                                     <constraint firstItem="MGo-7S-ulR" firstAttribute="top" secondItem="nj4-EO-AYp" secondAttribute="top" id="l6D-WO-VYJ"/>
                                 </constraints>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="pCY-EE-xjD">
-                                <rect key="frame" x="546" y="409" width="354" height="303"/>
-                                <subviews>
-                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L5u-cA-Ggh">
-                                        <rect key="frame" x="87" y="274" width="179" height="29"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Next: Slide i of n" usesSingleLineMode="YES" id="UEm-8W-DvG">
-                                            <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
-                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <pdfView identifier="slideViewNext" autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="240" verticalHuggingPriority="240" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="200" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTe-dX-JAn" customClass="SlideView">
-                                        <rect key="frame" x="0.0" y="0.0" width="354" height="266"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="kTe-dX-JAn" secondAttribute="height" multiplier="4:3" id="eqm-HJ-tMA"/>
-                                        </constraints>
-                                    </pdfView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="kTe-dX-JAn" secondAttribute="trailing" id="DjH-uz-xaX"/>
-                                    <constraint firstAttribute="bottom" secondItem="kTe-dX-JAn" secondAttribute="bottom" id="F87-us-MdT"/>
-                                    <constraint firstItem="kTe-dX-JAn" firstAttribute="top" secondItem="L5u-cA-Ggh" secondAttribute="bottom" constant="8" id="TjY-mo-geE"/>
-                                    <constraint firstItem="kTe-dX-JAn" firstAttribute="leading" secondItem="pCY-EE-xjD" secondAttribute="leading" id="ccb-hN-nIN"/>
-                                    <constraint firstItem="L5u-cA-Ggh" firstAttribute="top" secondItem="pCY-EE-xjD" secondAttribute="top" id="dgI-Ew-jjV"/>
-                                    <constraint firstAttribute="centerX" secondItem="L5u-cA-Ggh" secondAttribute="centerX" id="mEh-KZ-Su7"/>
-                                </constraints>
-                            </customView>
-                            <textField horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Qy2-Kt-zFA">
-                                <rect key="frame" x="0.0" y="0.0" width="921" height="194"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="Notes" drawsBackground="YES" id="MJU-se-t0a">
-                                    <font key="font" size="36" name=".HelveticaNeueDeskInterface-Regular"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="tQe-N3-A8Z">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="tQe-N3-A8Z" customClass="ColoredView">
                                 <rect key="frame" x="20" y="295" width="507" height="417"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9n-0R-0cU">
@@ -864,22 +829,57 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <pdfView identifier="slideViewCurrent" autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="240" verticalHuggingPriority="240" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="200" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSt-ZC-khH" customClass="SlideView">
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="5cC-vb-QBv" customClass="SlideView">
                                         <rect key="frame" x="0.0" y="0.0" width="507" height="380"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="rSt-ZC-khH" secondAttribute="height" multiplier="4:3" id="MKf-hX-isY"/>
+                                            <constraint firstAttribute="width" secondItem="5cC-vb-QBv" secondAttribute="height" multiplier="4:3" id="8fy-53-GHA"/>
                                         </constraints>
-                                    </pdfView>
+                                    </customView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="5cC-vb-QBv" secondAttribute="trailing" id="1e4-WD-WQs"/>
+                                    <constraint firstItem="5cC-vb-QBv" firstAttribute="leading" secondItem="tQe-N3-A8Z" secondAttribute="leading" id="ElP-rk-qvY"/>
                                     <constraint firstAttribute="centerX" secondItem="i9n-0R-0cU" secondAttribute="centerX" id="Hi3-Kv-RrZ"/>
-                                    <constraint firstAttribute="bottom" secondItem="rSt-ZC-khH" secondAttribute="bottom" id="TEN-eT-Hoy"/>
+                                    <constraint firstAttribute="bottom" secondItem="5cC-vb-QBv" secondAttribute="bottom" id="LF7-bx-n3z"/>
+                                    <constraint firstItem="5cC-vb-QBv" firstAttribute="top" secondItem="i9n-0R-0cU" secondAttribute="bottom" constant="8" id="Sh9-OX-Ggd"/>
                                     <constraint firstItem="i9n-0R-0cU" firstAttribute="top" secondItem="tQe-N3-A8Z" secondAttribute="top" id="a0t-3p-rmp"/>
-                                    <constraint firstItem="rSt-ZC-khH" firstAttribute="top" secondItem="i9n-0R-0cU" secondAttribute="bottom" constant="8" id="eeN-Df-7zC"/>
-                                    <constraint firstItem="rSt-ZC-khH" firstAttribute="leading" secondItem="tQe-N3-A8Z" secondAttribute="leading" id="lPX-yP-31y"/>
-                                    <constraint firstAttribute="trailing" secondItem="rSt-ZC-khH" secondAttribute="trailing" id="lz6-RW-2Kh"/>
                                 </constraints>
                             </customView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="pCY-EE-xjD" customClass="ColoredView">
+                                <rect key="frame" x="547" y="409" width="354" height="303"/>
+                                <subviews>
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L5u-cA-Ggh">
+                                        <rect key="frame" x="87" y="274" width="179" height="29"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Next: Slide i of n" usesSingleLineMode="YES" id="UEm-8W-DvG">
+                                            <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="QAU-LW-g0o" customClass="SlideView">
+                                        <rect key="frame" x="0.0" y="0.0" width="354" height="266"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="QAU-LW-g0o" secondAttribute="height" multiplier="4:3" id="lzu-4i-30w"/>
+                                        </constraints>
+                                    </customView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="QAU-LW-g0o" secondAttribute="bottom" id="2HL-FO-NS3"/>
+                                    <constraint firstItem="QAU-LW-g0o" firstAttribute="top" secondItem="L5u-cA-Ggh" secondAttribute="bottom" constant="8" id="Ycf-fY-GlS"/>
+                                    <constraint firstItem="L5u-cA-Ggh" firstAttribute="top" secondItem="pCY-EE-xjD" secondAttribute="top" id="dgI-Ew-jjV"/>
+                                    <constraint firstAttribute="trailing" secondItem="QAU-LW-g0o" secondAttribute="trailing" id="ehc-X7-07g"/>
+                                    <constraint firstAttribute="centerX" secondItem="L5u-cA-Ggh" secondAttribute="centerX" id="mEh-KZ-Su7"/>
+                                    <constraint firstItem="QAU-LW-g0o" firstAttribute="leading" secondItem="pCY-EE-xjD" secondAttribute="leading" id="qBm-jR-9cs"/>
+                                </constraints>
+                            </customView>
+                            <textField horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Qy2-Kt-zFA">
+                                <rect key="frame" x="0.0" y="0.0" width="921" height="194"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="Notes" drawsBackground="YES" id="MJU-se-t0a">
+                                    <font key="font" size="36" name=".HelveticaNeueDeskInterface-Regular"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="pCY-EE-xjD" firstAttribute="top" secondItem="nj4-EO-AYp" secondAttribute="bottom" constant="8" id="6g4-d2-mlP"/>
