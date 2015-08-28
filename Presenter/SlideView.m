@@ -8,9 +8,13 @@
 
 #import "SlideView.h"
 
+
+
 @interface SlideView ()
-@property NSSize maxPageSize;
+@property NSSize maxPageSize; // Determines the minimum size of the bounds, but only needs update when a new PDFDocument is set.
 @end
+
+
 
 @implementation SlideView
 
@@ -21,37 +25,44 @@
 }
 
 - (void)awakeFromNib {
+    self.color = [NSColor blackColor];
     self.maxPageSize = NSMakeSize(0, 0);
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    /* TODO: Remove debug code. */
-    [[NSColor redColor] set];
-    [NSBezierPath fillRect:dirtyRect];
-    NSLog(@"SlideView bounds: %.0f, %.0f, %.0f, %.0f", self.bounds.origin.x, self.bounds.origin.y, self.bounds.size.width, self.bounds.size.height);
-    
-    self.boundsSize = self.maxPageSize;
+    /* The frame and/or the bounds themselves may have changed. */
+    self.bounds = computeBounds(self.maxPageSize, self.frame.size);
     
     if (self.pdfDocument) {
         if (self.currentPageIndex < self.pdfDocument.pageCount) {
             PDFPage *page = [self.pdfDocument pageAtIndex:self.currentPageIndex];
             if (page) {
-                // TODO: Center the content if it is smaller than other pages?
+                // TODO: Center the content if it is smaller than the maxPageSize?
                 [page drawWithBox:kPDFDisplayBoxMediaBox];
             }
         } else {
-            /* This may happen if the SlideView shows the next slide of the presentation, while the current slide is actually the last one PDFPage of the PDFDocument. */
+            /* This happens if the SlideView shows the next slide of the presentation, while the current slide is actually the last PDFPage of the PDFDocument. */
             [self.color set];
             [NSBezierPath fillRect:dirtyRect];
         }
     }
 }
 
-//- (void)layout {
-//    
-//}
+/**
+ * The bounds are at least the minimumSize. If their aspect ratio is not the same as the frame's aspect ratio. The bounds are scaled up in one dimension and the origin is moved to center the contents.
+ */
+NSRect computeBounds(NSSize minimumSize, NSSize frameSize) {
+    CGFloat frameAspectRatio = frameSize.width / frameSize.height;
+    CGFloat aspectRatio = minimumSize.width / minimumSize.height;
+    CGFloat scaleFactor = frameAspectRatio / aspectRatio;
+    CGFloat w = minimumSize.width * MAX(scaleFactor, 1);
+    CGFloat h = minimumSize.height * MAX(1 / scaleFactor, 1);
+    CGFloat x = (minimumSize.width - w) / 2;
+    CGFloat y = (minimumSize.height - h) / 2;
+    return NSMakeRect(x, y, w, h);
+}
 
 - (void)setCurrentPageIndex:(NSUInteger)currentPageIndex {
     _currentPageIndex = currentPageIndex;
@@ -65,7 +76,7 @@
     /* Initialize index. */
     self.currentPageIndex = 0;
     
-    /* Set bounds so that all PDFPages fall within. TODO: What with the origin? */
+    /* Set bounds so that all PDFPages fall within. TODO: What with the origin? Does a PDFPage ever start not at (0,0)? */
     NSSize maxPageSize = NSMakeSize(0, 0);
     for (int i = 0; i < self.pdfDocument.pageCount; i++) {
         PDFPage *page = [self.pdfDocument pageAtIndex:self.currentPageIndex];
@@ -74,20 +85,7 @@
         maxPageSize.height = MAX(maxPageSize.height, pageBounds.size.height);
         maxPageSize.width = MAX(maxPageSize.width, pageBounds.size.width);
     }
-    // TODO: set bounds once, then update if there is a change, for example, in layout?.
-    // TODO: The aspect ratio constraint of the SlideView should now be updated.
     self.maxPageSize = maxPageSize;
-    self.boundsSize = maxPageSize;
-    
-//    /* Disable the widget of 'Text' annotations. */
-//    for (int i = 0; i < self.pdfDocument.pageCount; i++) {
-//        PDFPage *page = [self.pdfDocument pageAtIndex:self.currentPageIndex];
-//        for (PDFAnnotation *annotation in page.annotations) {
-//            if ([annotation.type isEqualToString:@"Text"]) {
-//                annotation.shouldDisplay = NO;
-//            }
-//        }
-//    }
     
     [self setNeedsDisplay:YES];
 }

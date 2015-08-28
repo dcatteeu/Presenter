@@ -26,7 +26,7 @@
 #import "SlideView.h"
 #import "ColoredView.h"
 
-static BOOL FULLSCREEN = NO;
+static BOOL FULLSCREEN = YES;
 typedef enum { stateOrganize, stateWait, statePresent } State;
 
 @interface AppDelegate ()
@@ -159,7 +159,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     NSOpenPanel* panel = [NSOpenPanel openPanel];
     [panel beginWithCompletionHandler:^(NSInteger result){
         if (result == NSFileHandlingPanelOKButton) {
-            NSURL* url = [[panel URLs] objectAtIndex:0];
+            NSURL* url = [panel URLs][0];
             //NSLog(@"%@", url);
             // TODO: Check whether we have a PDF.
             self.pdf = [[PDFDocument alloc] initWithURL:url];
@@ -298,10 +298,13 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     [self.publicWindow makeFirstResponder:self];
     [self.privateWindow makeFirstResponder:self];
     
+    // TODO: Remove debug code.
     //[self.clocksView setColor:[NSColor blueColor]];
-    [((ColoredView *)self.currentSlideView.superview) setColor:[NSColor blueColor]];
-    [((ColoredView *)self.oneAheadSlideView.superview) setColor:[NSColor greenColor]];
-    [self.privateWindow.childWindows[0] setNeedsDisplay:YES];
+    if (rehearse || [[NSScreen screens] count] >= 2) {
+        [((ColoredView *)self.currentSlideView.superview) setColor:[NSColor blueColor]];
+        [((ColoredView *)self.oneAheadSlideView.superview) setColor:[NSColor greenColor]];
+        [self.privateWindow.childWindows[0] setNeedsDisplay:YES];
+    }
 }
 
 // TODO: Deal with more than 2 screens by selecting 1 as the private and all others as public. You can cycle through the screen to select one as private.
@@ -309,20 +312,20 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 /* Assumes there is only one screen. */
 - (void)showPrivateWindowOnly {
     [self.organizerWindow orderOut:self];
-    [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
+    [self showWindow:self.privateWindow fullScreenOn:[NSScreen screens][0]];
 }
 
 /* Assumes there is only one screen. */
 - (void)showPublicWindowOnly {
     [self.organizerWindow orderOut:self];
-    [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:0]];
+    [self showWindow:self.publicWindow fullScreenOn:[NSScreen screens][0]];
 }
 
 /* Assumes there are two screens. */
 - (void)showPrivateAndPublicWindow {
     [self.organizerWindow orderOut:self];
-    [self showWindow:self.publicWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.publicScreenIndex]];
-    [self showWindow:self.privateWindow fullScreenOn:[[NSScreen screens] objectAtIndex:self.privateScreenIndex]];
+    [self showWindow:self.publicWindow fullScreenOn:[NSScreen screens][self.publicScreenIndex]];
+    [self showWindow:self.privateWindow fullScreenOn:[NSScreen screens][self.privateScreenIndex]];
 }
 
 - (void)showWindow:(NSWindow *)window fullScreenOn:(NSScreen *)screen {
@@ -399,12 +402,12 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
  */
 
 - (void)nextSlide:(NSArray *)slideViews oneAheadSlideView:(SlideView *)oneAheadSlideView label:(NSTextField *)label {
-    NSUInteger nextPageNumber = [[slideViews objectAtIndex:0] currentPageIndex] + 1;
+    NSUInteger nextPageNumber = [slideViews[0] currentPageIndex] + 1;
     [self gotoSlide:nextPageNumber views:slideViews oneAheadSlideView:oneAheadSlideView label:label];
 }
 
 - (void)previousSlide:(NSArray *)slideViews oneAheadSlideView:(SlideView *)oneAheadSlideView label:(NSTextField *)label {
-    NSUInteger previousPageNumber = [[slideViews objectAtIndex:0] currentPageIndex] - 1;
+    NSUInteger previousPageNumber = [slideViews[0] currentPageIndex] - 1;
     [self gotoSlide:previousPageNumber views:slideViews oneAheadSlideView:oneAheadSlideView label:label];
 }
 
@@ -415,7 +418,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     }
     
     // Notes
-    [self.notesTextField setStringValue:[self.notes objectAtIndex:slideIndex]];
+    [self.notesTextField setStringValue:self.notes[slideIndex]];
     
     // SlideViews
     NSUInteger nextSlideIndex = slideIndex + 1;
