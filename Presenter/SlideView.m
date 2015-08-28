@@ -11,14 +11,14 @@
 
 
 @interface SlideView ()
+
 @property NSSize maxPageSize; // Determines the minimum size of the bounds, but only needs update when a new PDFDocument is set.
+
 @end
 
 
 
 @implementation SlideView
-
-@synthesize pdfDocument = _pdfDocument; // Necessary since we have a custom setter.
 
 - (CGFloat)aspectRatio {
     return self.bounds.size.width / self.bounds.size.height;
@@ -26,13 +26,12 @@
 
 - (void)awakeFromNib {
     self.color = [NSColor blackColor];
-    self.maxPageSize = NSMakeSize(0, 0);
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    /* The frame and/or the bounds themselves may have changed. */
+    /* The PDFDocument, the frame, and/or the bounds themselves may have changed. */
     self.bounds = computeBounds(self.maxPageSize, self.frame.size);
     
     if (self.pdfDocument) {
