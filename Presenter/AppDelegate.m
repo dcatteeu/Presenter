@@ -298,9 +298,11 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     [self.publicWindow makeFirstResponder:self];
     [self.privateWindow makeFirstResponder:self];
     
-    // TODO: Remove debug code.
     //[self.clocksView setColor:[NSColor blueColor]];
     if (rehearse || [[NSScreen screens] count] >= 2) {
+        [self gotoSlide:0 views:self.allSlideViews oneAheadSlideView:self.oneAheadSlideView label:self.currentSlideLabel];
+        
+        // TODO: Remove debug code.
         [((ColoredView *)self.currentSlideView.superview) setColor:[NSColor blueColor]];
         [((ColoredView *)self.oneAheadSlideView.superview) setColor:[NSColor greenColor]];
         [self.privateWindow.childWindows[0] setNeedsDisplay:YES];
@@ -414,6 +416,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 /* Any page switch passes through this function. TODO: Remove parameter label or add oneAheadLabel*/
 - (void)gotoSlide:(NSUInteger)slideIndex views:(NSArray *)slideViews oneAheadSlideView:(SlideView *)oneAheadSlideView label:(NSTextField *)label {
     if (slideIndex >= self.pdf.pageCount) {
+        NSLog(@"AppDelegate gotoSlide:%lu - index out of bounds", slideIndex);
         return;
     }
     
