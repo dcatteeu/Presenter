@@ -25,6 +25,7 @@
                 <outlet property="oneAheadSlideLabel" destination="L5u-cA-Ggh" id="3PA-c7-dB7"/>
                 <outlet property="oneAheadSlideView" destination="QAU-LW-g0o" id="DSw-a9-jxI"/>
                 <outlet property="organizerWindow" destination="QvC-M9-y7g" id="QCm-16-tu5"/>
+                <outlet property="pdfThumbnailView" destination="3Go-P3-pii" id="Bh4-EW-6Fr"/>
                 <outlet property="pdfView" destination="HD5-M1-63u" id="1vz-zt-TWu"/>
                 <outlet property="privateWindow" destination="fBz-cl-p1l" id="ZJ2-Hm-UXM"/>
                 <outlet property="publicSlideView" destination="BCX-8L-Wff" id="bvy-wr-lwV"/>
@@ -685,71 +686,94 @@
         <window title="Presenter" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="499" height="425"/>
+            <rect key="contentRect" x="335" y="390" width="645" height="365"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="499" height="425"/>
+                <rect key="frame" x="0.0" y="0.0" width="645" height="365"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <pdfView wantsLayer="YES" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HD5-M1-63u">
-                        <rect key="frame" x="20" y="61" width="459" height="344"/>
-                        <constraints>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="262" id="LFK-FD-QU8"/>
-                            <constraint firstAttribute="width" secondItem="HD5-M1-63u" secondAttribute="height" multiplier="4:3" id="X29-Cy-xkH"/>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="440" id="d8A-0N-X9y"/>
-                        </constraints>
-                    </pdfView>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ir-Wi-WJM">
-                        <rect key="frame" x="24" y="367" width="82" height="32"/>
-                        <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5bs-lz-Hdh">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PXf-OB-XDn">
-                        <rect key="frame" x="14" y="13" width="87" height="32"/>
-                        <buttonCell key="cell" type="push" title="Present" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9La-G2-tWg">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="present:" target="Voe-Tx-rLC" id="NbH-6N-vmW"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3BS-Te-VYk">
-                        <rect key="frame" x="101" y="13" width="98" height="32"/>
-                        <buttonCell key="cell" type="push" title="Rehearse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mwA-fV-OFc">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="rehearse:" target="Voe-Tx-rLC" id="HDc-I8-7Ye"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oTp-2h-QvK">
-                        <rect key="frame" x="199" y="13" width="86" height="32"/>
-                        <buttonCell key="cell" type="push" title="Open..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YdT-5S-fWA">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="openDocument:" target="Voe-Tx-rLC" id="B63-gz-lPN"/>
-                        </connections>
-                    </button>
+                    <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qpF-12-FOs">
+                        <rect key="frame" x="0.0" y="0.0" width="645" height="365"/>
+                        <subviews>
+                            <customView id="IeG-Z6-BNr">
+                                <rect key="frame" x="0.0" y="0.0" width="157" height="365"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <subviews>
+                                    <pdfThumbnailView misplaced="YES" placeholderIntrinsicWidth="148" placeholderIntrinsicHeight="365" translatesAutoresizingMaskIntoConstraints="NO" id="3Go-P3-pii">
+                                        <rect key="frame" x="0.0" y="0.0" width="148" height="2"/>
+                                        <size key="thumbnailSize" width="64" height="64"/>
+                                    </pdfThumbnailView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="3Go-P3-pii" secondAttribute="bottom" id="4Wr-ay-p85"/>
+                                    <constraint firstAttribute="trailing" secondItem="3Go-P3-pii" secondAttribute="trailing" id="59s-Xt-arh"/>
+                                    <constraint firstItem="3Go-P3-pii" firstAttribute="leading" secondItem="IeG-Z6-BNr" secondAttribute="leading" id="8f1-bH-hHg"/>
+                                    <constraint firstItem="3Go-P3-pii" firstAttribute="top" secondItem="IeG-Z6-BNr" secondAttribute="top" id="LjW-4q-02y"/>
+                                </constraints>
+                            </customView>
+                            <customView id="zuB-aQ-7mU">
+                                <rect key="frame" x="158" y="0.0" width="487" height="365"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <subviews>
+                                    <pdfView wantsLayer="YES" misplaced="YES" placeholderIntrinsicWidth="400" placeholderIntrinsicHeight="300" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HD5-M1-63u">
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="262" id="LFK-FD-QU8"/>
+                                            <constraint firstAttribute="width" secondItem="HD5-M1-63u" secondAttribute="height" multiplier="4:3" id="X29-Cy-xkH"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="440" id="d8A-0N-X9y"/>
+                                        </constraints>
+                                    </pdfView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="HD5-M1-63u" firstAttribute="top" secondItem="zuB-aQ-7mU" secondAttribute="top" id="6cw-Ys-DWM"/>
+                                    <constraint firstAttribute="bottom" secondItem="HD5-M1-63u" secondAttribute="bottom" id="Fq2-nh-vUP"/>
+                                    <constraint firstAttribute="trailing" secondItem="HD5-M1-63u" secondAttribute="trailing" id="Rdp-DD-S1R"/>
+                                    <constraint firstItem="HD5-M1-63u" firstAttribute="leading" secondItem="zuB-aQ-7mU" secondAttribute="leading" id="eOk-08-yg1"/>
+                                </constraints>
+                            </customView>
+                        </subviews>
+                        <holdingPriorities>
+                            <real value="240"/>
+                            <real value="250"/>
+                        </holdingPriorities>
+                    </splitView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="3BS-Te-VYk" firstAttribute="leading" secondItem="PXf-OB-XDn" secondAttribute="trailing" constant="12" id="7Ch-2G-HJE"/>
-                    <constraint firstAttribute="trailing" secondItem="HD5-M1-63u" secondAttribute="trailing" constant="20" id="BEF-eM-8WK"/>
-                    <constraint firstItem="oTp-2h-QvK" firstAttribute="top" secondItem="3BS-Te-VYk" secondAttribute="top" id="LDf-AA-xy1"/>
-                    <constraint firstItem="PXf-OB-XDn" firstAttribute="top" secondItem="HD5-M1-63u" secondAttribute="bottom" constant="20" id="Zk1-3M-w8X"/>
-                    <constraint firstItem="HD5-M1-63u" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="bjX-vd-RlD"/>
-                    <constraint firstItem="oTp-2h-QvK" firstAttribute="leading" secondItem="3BS-Te-VYk" secondAttribute="trailing" constant="12" id="chc-HX-KA4"/>
-                    <constraint firstItem="oTp-2h-QvK" firstAttribute="top" secondItem="PXf-OB-XDn" secondAttribute="top" id="dLw-VN-Kn9"/>
-                    <constraint firstItem="HD5-M1-63u" firstAttribute="leading" secondItem="PXf-OB-XDn" secondAttribute="leading" id="q3d-Yh-viS"/>
-                    <constraint firstAttribute="bottom" secondItem="PXf-OB-XDn" secondAttribute="bottom" constant="20" id="qfE-ep-Vcm"/>
-                    <constraint firstItem="HD5-M1-63u" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="uYe-6b-CAb"/>
+                    <constraint firstItem="qpF-12-FOs" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="D4a-lh-9Tn"/>
+                    <constraint firstAttribute="trailing" secondItem="qpF-12-FOs" secondAttribute="trailing" id="DOj-Ps-IrN"/>
+                    <constraint firstAttribute="bottom" secondItem="qpF-12-FOs" secondAttribute="bottom" id="Gan-bY-t8d"/>
+                    <constraint firstItem="qpF-12-FOs" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="hvr-rN-KYO"/>
                 </constraints>
             </view>
+            <toolbar key="toolbar" implicitIdentifier="C47D5EF1-1310-4FC1-A182-05EB7998B106" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="kSa-9n-mJI">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Sqr-Wf-dqp"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="K5W-E1-qyP"/>
+                    <toolbarItem implicitItemIdentifier="D05504BE-0F95-4591-99E4-AB3B20784AD4" label="Rehearse" paletteLabel="Rehearse" tag="-1" image="NSRefreshTemplate" id="HIh-fI-uCI">
+                        <connections>
+                            <action selector="rehearse:" target="Voe-Tx-rLC" id="OiQ-9O-ghH"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="9607D5FF-139B-4E4E-BD36-DEAA35B16D0A" label="Open..." paletteLabel="Open..." tag="-1" image="NSFolder" id="nmn-nv-Hjv">
+                        <connections>
+                            <action selector="openDocument:" target="Voe-Tx-rLC" id="o7V-Q6-Th0"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="540B45D1-7BBF-41DA-A988-5F6DC00B6726" label="Preferences" paletteLabel="Preferences" tag="-1" image="NSPreferencesGeneral" id="Wkn-vl-Ul4"/>
+                    <toolbarItem implicitItemIdentifier="171223FE-47A5-4F5F-870A-765944B4F433" label="Present" paletteLabel="Present" tag="-1" image="NSSlideshowTemplate" id="7RS-7z-JXT">
+                        <connections>
+                            <action selector="present:" target="Voe-Tx-rLC" id="h8s-zv-3ci"/>
+                        </connections>
+                    </toolbarItem>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="nmn-nv-Hjv"/>
+                    <toolbarItem reference="Sqr-Wf-dqp"/>
+                    <toolbarItem reference="7RS-7z-JXT"/>
+                    <toolbarItem reference="HIh-fI-uCI"/>
+                    <toolbarItem reference="K5W-E1-qyP"/>
+                    <toolbarItem reference="Wkn-vl-Ul4"/>
+                </defaultToolbarItems>
+            </toolbar>
             <point key="canvasLocation" x="-60.5" y="396.5"/>
         </window>
         <window title="PublicWindow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="oEc-kt-jZZ">
@@ -846,9 +870,9 @@
                                 </constraints>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="pCY-EE-xjD" customClass="ColoredView">
-                                <rect key="frame" x="547" y="409" width="354" height="303"/>
+                                <rect key="frame" x="546" y="409" width="354" height="303"/>
                                 <subviews>
-                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L5u-cA-Ggh">
+                                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L5u-cA-Ggh">
                                         <rect key="frame" x="87" y="274" width="179" height="29"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Next: Slide i of n" usesSingleLineMode="YES" id="UEm-8W-DvG">
                                             <font key="font" size="24" name=".HelveticaNeueDeskInterface-Regular"/>
@@ -908,5 +932,48 @@
             </view>
             <point key="canvasLocation" x="150.5" y="1416.5"/>
         </window>
+        <customView id="Kq4-7i-2hL">
+            <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXf-OB-XDn">
+                    <rect key="frame" x="-6" y="68" width="87" height="32"/>
+                    <buttonCell key="cell" type="push" title="Present" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9La-G2-tWg">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="present:" target="Voe-Tx-rLC" id="NbH-6N-vmW"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3BS-Te-VYk">
+                    <rect key="frame" x="-6" y="48" width="98" height="32"/>
+                    <buttonCell key="cell" type="push" title="Rehearse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mwA-fV-OFc">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="rehearse:" target="Voe-Tx-rLC" id="HDc-I8-7Ye"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oTp-2h-QvK">
+                    <rect key="frame" x="38" y="2" width="86" height="32"/>
+                    <buttonCell key="cell" type="push" title="Open..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YdT-5S-fWA">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="openDocument:" target="Voe-Tx-rLC" id="B63-gz-lPN"/>
+                    </connections>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="-109.5" y="720"/>
+        </customView>
     </objects>
+    <resources>
+        <image name="NSFolder" width="32" height="32"/>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+        <image name="NSSlideshowTemplate" width="17" height="14"/>
+    </resources>
 </document>

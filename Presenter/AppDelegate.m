@@ -35,19 +35,21 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 
 @property NSUInteger privateScreenIndex;
 @property NSUInteger publicScreenIndex;
+@property PDFDocument *pdf;
+
+@property NSArray *allSlideViews;
+@property NSArray *allButOneAheadSlideView;
 
 @property (weak) IBOutlet NSWindow *organizerWindow;
 @property (weak) IBOutlet NSWindow *privateWindow;
 @property (weak) IBOutlet NSWindow *publicWindow;
 
-@property PDFDocument *pdf;
+/* Organizer window elements */
+@property (weak) IBOutlet PDFThumbnailView *pdfThumbnailView;
 @property (weak) IBOutlet PDFView *pdfView;
-@property (weak) IBOutlet SlideView *publicSlideView;
-@property NSArray *allSlideViews;
-@property NSArray *allButOneAheadSlideView;
 
-///* This PDF is used by the oneAheadSlideView to show a black slide when at the end of the presentation. */
-//@property PDFDocument *blackPdf;
+/* Public window elements */
+@property (weak) IBOutlet SlideView *publicSlideView;
 
 /* Private window elements */
 @property (weak) IBOutlet ColoredView *backgroundView;
@@ -103,6 +105,8 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     [self registerDefaults];
     
+    [self.pdfThumbnailView setPDFView:self.pdfView];
+    
     /* Put all pdf views in an array for bulk processing. */
     self.allSlideViews = [NSArray arrayWithObjects:self.publicSlideView, self.currentSlideView, self.oneAheadSlideView, nil];
     self.allButOneAheadSlideView = [NSArray arrayWithObjects:self.publicSlideView, self.currentSlideView, nil];
@@ -116,9 +120,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     [self.publicWindow setDelegate:self];
     [self.privateWindow setDelegate:self];
     
-    /* Layout private window manually according to preferences. */
-    //[self layoutPrivateWindow];
-    
     /* To ease debugging, load a PDF. */
     self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/example.pdf"]];
     
@@ -127,8 +128,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
         NSLog(@"Yes");
         [self loadPdf];
     }
-    
-//    self.blackPdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/black.pdf"]];;
     
     [self switchToOrganizerMode];
 }
@@ -170,9 +169,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 
 - (void)loadPdf {
     [self.pdfView setDocument:self.pdf];
-    [self.pdfView setDisplayMode:kPDFDisplaySinglePage];
-    [self.pdfView setAutoScales:YES];
-    [self.pdfView setDisplaysPageBreaks:NO];
     for (SlideView* slideView in self.allSlideViews) {
         [slideView setPdfDocument:self.pdf];
         [slideView setCurrentPageIndex:0];
@@ -197,7 +193,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
                 [annotation setShouldDisplay:NO];
             }
         }
-        [notes setObject:str atIndexedSubscript:i];
+        notes[i] = str;
     }
     self.notes = [NSArray arrayWithArray:notes];
 }
@@ -243,21 +239,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 /* ----------------------------------------------------------------
  * Implementation window handling
  */
-
-//- (void)layoutPrivateWindow {
-//    // TODO: programmatically change the view's size
-//    NSRect frame = [self.currentPdfView.superview frame];
-//    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-//    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-//    CGFloat x = [preferences floatForKey:@"leftCurrentSlide"];
-//    CGFloat y = [preferences floatForKey:@"topCurrentSlide"];
-//    CGFloat w = frame.size.width * [preferences floatForKey:@"widthCurrentSlide"];
-//    CGFloat h = w * [preferences floatForKey:@"slideAspectRatio"];
-//    frame = NSMakeRect(x, y, w, h);
-//    NSLog(@"frame: %f, %f, %f, %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-//    [self.currentPdfView setFrame:frame];
-//    [self.currentPdfView setNeedsDisplay:YES];
-//}
 
 /* In organizer mode only the organizer window is visible while the public and private window are hidden. */
 - (void)switchToOrganizerMode {
