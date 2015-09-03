@@ -89,7 +89,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
  */
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
-    NSLog(@"windowDidExitFullScreen:");
 //    NSWindow *window = (NSWindow *)notification.object;
 //    if (window == self.publicWindow || window == self.privateWindow) {
         [self switchToOrganizerMode];
@@ -102,6 +101,11 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
  * NSApplicationDelegate implementation 
  */
 
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename {
+    self.pdf = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:filename]];
+    return YES;
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     [self registerDefaults];
     
@@ -113,19 +117,18 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     
     self.privateScreenIndex = 0;
     self.publicScreenIndex = 1;
-    NSUInteger nofScreens = [[NSScreen screens] count];
-    NSLog(@"nofScreens: %u", (unsigned int)nofScreens);
     
     /* Set delegate to catch windowDidExitFullScreen event to restore organizer mode when exiting full screen. */
     [self.publicWindow setDelegate:self];
     [self.privateWindow setDelegate:self];
     
+#ifdef DEBUG
     /* To ease debugging, load a PDF. */
     self.pdf = [[PDFDocument alloc] initWithURL:[NSURL URLWithString:@"file:///Users/dcatteeu/Projects/Presenter/doc/example.pdf"]];
+#endif
     
     /* When opening the application with a PDF file (for example by double clicking the PDF or dragging it on top of the application's icon. application:openFile is called before applicationDidFinishLaunching:, so self.pdf is set, but the hasn't been linked with self.pdfView. Therefore, check. */
     if (self.pdf) {
-        NSLog(@"Yes");
         [self loadPdf];
     }
     
@@ -175,9 +178,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     }
     [self.oneAheadSlideView setCurrentPageIndex:1];
     
-//    /* Slide indices start at 0. */
-//    [self gotoSlide:0 views:self.allButOneAheadSlideView oneAheadPdfView:self.oneAheadSlideView label:self.currentSlideLabel];
-    
     /* Concatenate all text annotations with an empty line in between and show as this slide's notes. Disable the corresponding widgets. */
     NSMutableArray *notes = [[NSMutableArray alloc] initWithCapacity:self.pdf.pageCount];
     for (int i = 0; i < self.pdf.pageCount; i++) {
@@ -199,7 +199,6 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
 }
 
 - (void)keyDown:(NSEvent *)event {
-    NSLog(@"keyDown: %@ (0x%x)", event.charactersIgnoringModifiers,  event.keyCode);
     // TODO: replace keys by constants, but where are they defined?
     switch (event.keyCode) {
             // escape
@@ -279,14 +278,15 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     [self.publicWindow makeFirstResponder:self];
     [self.privateWindow makeFirstResponder:self];
     
-    //[self.clocksView setColor:[NSColor blueColor]];
     if (rehearse || [[NSScreen screens] count] >= 2) {
         [self gotoSlide:0 views:self.allSlideViews oneAheadSlideView:self.oneAheadSlideView label:self.currentSlideLabel];
         
+#ifdef DEBUG
         // TODO: Remove debug code.
         [((ColoredView *)self.currentSlideView.superview) setColor:[NSColor blueColor]];
         [((ColoredView *)self.oneAheadSlideView.superview) setColor:[NSColor greenColor]];
         [self.privateWindow.childWindows[0] setNeedsDisplay:YES];
+#endif
     }
 }
 
@@ -341,7 +341,7 @@ typedef enum { stateOrganize, stateWait, statePresent } State;
     NSDateComponents *comps = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:now];
     next = [cal dateFromComponents:comps];
     
-#ifndef NDEBUG
+#ifdef DEBUG
     comps = [cal components:NSCalendarUnitNanosecond fromDate:next];
     assert(comps.nanosecond == 0);
 #endif

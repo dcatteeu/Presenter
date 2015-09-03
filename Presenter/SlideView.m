@@ -50,7 +50,7 @@
 }
 
 /**
- * The bounds are at least the minimumSize. If their aspect ratio is not the same as the frame's aspect ratio. The bounds are scaled up in one dimension and the origin is moved to center the contents.
+ * The bounds are at least the minimumSize. If their aspect ratio is not the same as the frame's aspect ratio. The bounds are scaled up in one dimension and the origin is moved to center the contents. Also see, http://nshipster.com/image-resizing/ The function AVMakeRectWithAspectRatioInsideRect probably solves part of this problem.
  */
 NSRect computeBounds(NSSize minimumSize, NSSize frameSize) {
     CGFloat frameAspectRatio = frameSize.width / frameSize.height;

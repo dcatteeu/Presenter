@@ -744,7 +744,7 @@
                     <constraint firstItem="qpF-12-FOs" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="hvr-rN-KYO"/>
                 </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="C47D5EF1-1310-4FC1-A182-05EB7998B106" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="kSa-9n-mJI">
+            <toolbar key="toolbar" implicitIdentifier="C47D5EF1-1310-4FC1-A182-05EB7998B106" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="small" id="kSa-9n-mJI">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Sqr-Wf-dqp"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="K5W-E1-qyP"/>
@@ -932,43 +932,6 @@
             </view>
             <point key="canvasLocation" x="150.5" y="1416.5"/>
         </window>
-        <customView id="Kq4-7i-2hL">
-            <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXf-OB-XDn">
-                    <rect key="frame" x="-6" y="68" width="87" height="32"/>
-                    <buttonCell key="cell" type="push" title="Present" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9La-G2-tWg">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="present:" target="Voe-Tx-rLC" id="NbH-6N-vmW"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3BS-Te-VYk">
-                    <rect key="frame" x="-6" y="48" width="98" height="32"/>
-                    <buttonCell key="cell" type="push" title="Rehearse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mwA-fV-OFc">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="rehearse:" target="Voe-Tx-rLC" id="HDc-I8-7Ye"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oTp-2h-QvK">
-                    <rect key="frame" x="38" y="2" width="86" height="32"/>
-                    <buttonCell key="cell" type="push" title="Open..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YdT-5S-fWA">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="openDocument:" target="Voe-Tx-rLC" id="B63-gz-lPN"/>
-                    </connections>
-                </button>
-            </subviews>
-            <point key="canvasLocation" x="-109.5" y="720"/>
-        </customView>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>
